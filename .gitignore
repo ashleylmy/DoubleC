@@ -4,10 +4,6 @@
 
 ### Code ###
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 ### Java ###
 # Compiled class file
@@ -123,3 +119,7 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/code,java,linux,macos,gradle,windows
+
+# Created by VS Code Java Extension
+.settings/
+.project
