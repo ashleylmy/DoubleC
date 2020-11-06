@@ -4,29 +4,24 @@ import edu.northeastern.cs5500.delivery.model.user.User;
 import org.junit.jupiter.api.Test;
 
 class UserControllerTest {
-    //default user for testing.
-    //TODO need to add order and shopping cart for testing
+    // default user for testing.
+    // TODO need to add order and shopping cart for testing
 
-    final User defaultUser1 = new User("tstark@mail.com","iron man","Tony Stark");
-    final User defaultUser2 = new User("pparker@mail.com", "spider man","Peter Parker");
-
-    @Test
-    void getOrderHistory() {
-    }
+    final User defaultUser1 = new User("tstark@mail.com", "iron man", "Tony Stark");
+    final User defaultUser2 = new User("pparker@mail.com", "spider man", "Peter Parker");
 
     @Test
-    void checkout() {
-    }
+    void getOrderHistory() {}
 
     @Test
-    void checkOrderStatus() {
-    }
+    void checkout() {}
 
     @Test
-    void cancelOrder() {
-    }
+    void checkOrderStatus() {}
 
     @Test
-    void reviewRestaurant() {
-    }
+    void cancelOrder() {}
+
+    @Test
+    void reviewRestaurant() {}
 }

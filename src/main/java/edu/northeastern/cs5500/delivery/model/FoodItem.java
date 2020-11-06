@@ -6,7 +6,6 @@ import lombok.Data;
 public class FoodItem {
     private int price, quantity;
     private String name;
-    //Should Food Item have restaurant attribute?
-    private String restaurant;//need to have restaurant class
-
+    // Should Food Item have restaurant attribute?
+    private String restaurant; // need to have restaurant class
 }
