@@ -1,86 +1,97 @@
 package edu.northeastern.cs5500.delivery.controller;
 
-
-
-import edu.northeastern.cs5500.delivery.model.Driver.Car;
 import edu.northeastern.cs5500.delivery.model.Driver.Driver;
 import edu.northeastern.cs5500.delivery.model.Order;
+import edu.northeastern.cs5500.delivery.repository.GenericRepository;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-
 @Singleton
 @Slf4j
-
 public class DriverController {
+    private GenericRepository<Driver> drivers;
 
-    private final Driver driver;
-    private final OrderController orderController;
+    @Inject OrderController orderController;
 
-    public DriverController(Driver driver, OrderController orderController, OrderController orderController1) {
-        this.driver = driver;
-        this.orderController = orderController;
-
-    }
-
+    // driver has three main tasks: 1. pick an available driver from drivers DB 2. driver pickup
+    // order 3. deliver order
     @Inject
+    public DriverController(GenericRepository<Driver> drivers) {
+        this.drivers = drivers;
+        log.debug("DriverController->constructor");
+        if (drivers.count() > 0) {
+            return;
+        }
+        log.info("DriverController > construct > adding default driver with name");
 
+        final Driver driver1 = new Driver("Alex Jackson");
+        final Driver driver2 = new Driver("John Smith");
 
-    public void orderPickup (Order order) {
+        try {
+            addDriver(driver1);
+            addDriver(driver2);
+        } catch (Exception e) {
+            log.error("DriverController > construct > adding default drivers > failure?");
+            e.printStackTrace();
+        }
+    }
 
-        Car car = new Car("Toyota", "Camry", "BCN3300");
-        Driver driver = new Driver(ObjectId.get(), "Alex Jackson", "+1 (425)-333-4444", car,2000.00);
-        System.out.println(driver);
-        // change order status
-        this.orderController.orderPicked(order);
-        Runnable newRunnable = new Runnable() {
-            @Override
-            public void run() {
-                orderDelivered(order);
-            }
-        };
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.scheduleAtFixedRate(newRunnable, 0,5, TimeUnit.SECONDS);
+    // add new driver to drivers DB
+    @Nonnull
+    private Driver addDriver(Driver driver) throws Exception {
+        log.debug("DriverController > addDriver(...)");
+        ObjectId id = driver.getId();
+        if (id != null && drivers.get(id) != null) {
+            // TODO exception
+            throw new Exception("DriverID existed");
+        }
+        return drivers.add(driver);
+    }
+
+    private Driver pickAvailableDriver() {
+        return drivers.getAll().iterator().next();
+    }
+
+    // driver pick up an new order and change order status
+    public void orderPickup(Order order) {
+        log.debug("DriverController->orderPickup()" + "Calling orderController to pickup order");
+        orderController.orderPicked(order);
+        //        Runnable newRunnable = new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                orderDelivered(order);
+        //            }
+        //        };
+        //        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        //        executorService.scheduleAtFixedRate(newRunnable, 0,5, TimeUnit.SECONDS);
 
     }
 
-
-
+    // Deliver order to User
     public void orderDelivered(Order order) {
-
-       this.orderController.oderDelivered(order);
-        Runnable newRunnable = new Runnable() {
-            @Override
-            public void run() {
-                completeOrder(order);
-            }
-        };
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.scheduleAtFixedRate(newRunnable, 0,5, TimeUnit.SECONDS);
+        orderController.oderDelivered(order);
+        //        Runnable newRunnable = new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                completeOrder(order);
+        //            }
+        //        };
+        //        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        //        executorService.scheduleAtFixedRate(newRunnable, 0,5, TimeUnit.SECONDS);
 
     }
 
-
-
-
-
-    public void completeOrder(Order order) {
+    public void completeOrder(Driver order) {
         // notify user
         notifyUserComplete(order);
         System.out.println("Order" + order + "is completed.");
-
     }
 
-    public void notifyUserComplete(Order order) {
-        //User check status?
-        System.out.println( "Your order" + order + "is completed.");
+    public void notifyUserComplete(Driver order) {
+        // User check status?
+        System.out.println("Your order" + order + "is completed.");
     }
-
-
 }
