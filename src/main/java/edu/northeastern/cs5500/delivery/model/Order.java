@@ -20,7 +20,7 @@ public class Order implements Model {
     private int rating;
 
     @Override
-    public ObjectId getId() {
+    public Order getId() {
         return null;
     }
 
