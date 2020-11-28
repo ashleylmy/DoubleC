@@ -26,7 +26,8 @@ repositories {
 
 dependencies {
     // Simple HTTP framework - http://sparkjava.com/
-    implementation 'com.sparkjava:spark-core:2.9.1'
+    implementation 'com.sparkjava:spark-core:2.9.3'
+    compile 'com.sparkjava:spark-template-handlebars:2.7.1'
 
     // Basic logging support; used by Spark
     implementation "org.slf4j:slf4j-simple:1.7.25"
@@ -55,6 +56,10 @@ dependencies {
 
     // MongoDB client
     implementation 'org.mongodb:mongodb-driver:3.12.1'
+
+    // authentication API
+    compile 'com.nimbusds:srp6a:1.5.3'
+
 }
 
 application {

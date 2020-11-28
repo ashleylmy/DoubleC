@@ -2,8 +2,12 @@ package edu.northeastern.cs5500.delivery;
 
 import static spark.Spark.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class App {
 
+    // get the server port
     static int getAssignedPort() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         if (processBuilder.environment().get("PORT") != null) {
@@ -13,6 +17,10 @@ public class App {
     }
 
     public static void main(String[] arg) {
+
+        Logger logger = LoggerFactory.getLogger(App.class);
+        staticFileLocation("/public");
+
         // run on port 5000
         port(getAssignedPort());
 
@@ -37,7 +45,23 @@ public class App {
                     return "OK";
                 });
 
-        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+        // make user is logged in
+        // user can review restaurants without logging in
+        //        before(
+        //                "/*/",
+        //                (req, res) -> {
+        //                    Session session = req.session(true);
+        //                    boolean auth =
+        //                            session.attribute(Path.Web.AUTH_STATUS) != null
+        //                                    ? session.attribute(Path.Web.AUTH_STATUS)
+        //                                    : false;
+        //                    logger.info("auth status = " + auth);
+        //                    if (!auth) {
+        //                        logger.warn("Secured Area! Login is REQUIRED");
+        //                        res.redirect(Path.Web.GET_LOGIN_PAGE);
+        //                        halt(401);
+        //                    }
+        //                });
 
         // print all unhandled exceptions
         exception(Exception.class, (e, req, res) -> e.printStackTrace());

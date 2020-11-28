@@ -1,9 +1,6 @@
 package edu.northeastern.cs5500.delivery.view;
 
-import static spark.Spark.delete;
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.put;
+import static spark.Spark.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.northeastern.cs5500.delivery.JsonTransformer;
@@ -12,6 +9,7 @@ import edu.northeastern.cs5500.delivery.model.Delivery;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 
 @Singleton
 @Slf4j
@@ -38,18 +36,17 @@ public class DeliveryView implements View {
                 jsonTransformer);
 
         get(
-                "/delivery/*",
+                "/delivery/:id",
                 (request, response) -> {
-                    return "id page" + request.params();
-                    //                    final String paramId = request.params(":id");
-                    //                    log.debug("/delivery/:id<{}>", paramId);
-                    //                    final ObjectId id = new ObjectId(paramId);
-                    //                    Delivery delivery = deliveryController.getDelivery(id);
-                    //                    if (delivery == null) {
-                    //                        halt(404,"wrong id");
-                    //                    }
-                    //                    response.type("application/json");
-                    //                    return delivery;
+                    final String paramId = request.params(":id");
+                    log.debug("/delivery/:id<{}>", paramId);
+                    final ObjectId id = new ObjectId(paramId);
+                    Delivery delivery = deliveryController.getDelivery(id);
+                    if (delivery == null) {
+                        halt(404);
+                    }
+                    response.type("application/json");
+                    return delivery;
                 },
                 jsonTransformer);
 
