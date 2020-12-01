@@ -102,7 +102,7 @@ public class UserController {
     }
 
     // add selected food to new order and set delivery address, payment info.
-    public Order orderGen(User user, Double tip) {
+    public Order orderGen(User user, Double tip) throws Exception {
         // add shopping cart to order
         Order newOrder = orderController.generateOrder(user.getCart());
         // adding tip to total cost
@@ -114,6 +114,7 @@ public class UserController {
         // setOrderStatus to ordered
         newOrder.setStatus(OrderStatus.ORDERED);
         // notify restaurant about new order
+        orderController.addOrder(newOrder);
         orderController.notifyRestaurant(newOrder);
         return newOrder;
     }
@@ -157,5 +158,10 @@ public class UserController {
         if (order.getStatus().equals(OrderStatus.COMPLETED)) {
             order.setRating(rating);
         }
+    }
+
+    public void updateUser(User user) {
+        log.debug("UserController > updateUser(...)");
+        users.update(user);
     }
 }
