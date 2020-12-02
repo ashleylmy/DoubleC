@@ -104,6 +104,8 @@ public class OrderController {
         }
     }
 
-    //** to do get order by order id */
-
+    // ** to do get order by order id */
+    public Order getOrder(ObjectId id) {
+        return orders.get(id);
+    }
 }

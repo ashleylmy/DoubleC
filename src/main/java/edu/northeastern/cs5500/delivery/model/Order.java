@@ -9,7 +9,7 @@ import org.bson.types.ObjectId;
 
 @Data
 public class Order implements Model {
-    private ObjectId orderId;
+    private ObjectId id;
     private ArrayList<FoodItem> dishOrder;
     private User user;
     private OrderStatus status;
@@ -19,9 +19,14 @@ public class Order implements Model {
     private Restaurant restaurant;
     private int rating;
 
-    @Override
-    public Order getId() {
-        return null;
+    public Order() {}
+
+    public Order(
+            ObjectId orderId, ArrayList<FoodItem> dishOrder, User user, Restaurant restaurant) {
+        this.id = orderId;
+        this.dishOrder = dishOrder;
+        this.user = user;
+        this.restaurant = restaurant;
     }
 
     @Override
