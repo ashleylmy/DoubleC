@@ -28,7 +28,4 @@ public class Order implements Model {
         this.user = user;
         this.restaurant = restaurant;
     }
-
-    @Override
-    public void setId(ObjectId id) {}
 }

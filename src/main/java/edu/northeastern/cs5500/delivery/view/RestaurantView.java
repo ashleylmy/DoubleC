@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 
 @Singleton
 @Slf4j
@@ -28,16 +30,15 @@ public class RestaurantView implements View {
 
         // show all restaurants, thumbnails on main page
         get(
-                "/",
+                Path.Web.HOME,
                 (request, response) -> {
-                    log.debug("/restaurants");
-                    response.type("application/json");
-                    return restaurantController.getAllRestaurants();
+                    log.debug("home page");
+                    return new ModelAndView(null, Path.Templates.INDEX) {};
                 },
-                jsonTransformer);
+                new HandlebarsTemplateEngine());
 
         get(
-                "/",
+                "/restaurants",
                 (request, response) -> {
                     log.debug("/restaurants");
                     response.type("application/json");
