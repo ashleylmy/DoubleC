@@ -4,6 +4,7 @@ import edu.northeastern.cs5500.delivery.model.Order;
 import edu.northeastern.cs5500.delivery.model.OrderStatus;
 import edu.northeastern.cs5500.delivery.model.Restaurant.Restaurant;
 import edu.northeastern.cs5500.delivery.repository.GenericRepository;
+import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,7 +42,7 @@ public class RestaurantController {
     }
 
     @Nonnull
-    private Restaurant addRestaurant(Restaurant restaurant) throws Exception {
+    public Restaurant addRestaurant(Restaurant restaurant) throws Exception {
         log.debug("RestaurantController > addNewRestaurant(...)");
         ObjectId id = restaurant.getId();
         if (id != null && restaurants.get(id) != null) {
@@ -49,6 +50,28 @@ public class RestaurantController {
             throw new Exception("Restaurant existed");
         }
         return restaurants.add(restaurant);
+    }
+
+    @Nonnull
+    public Collection<Restaurant> getAllRestaurants() {
+        log.debug("RestaurantsController > getRestaurants()");
+        return restaurants.getAll();
+    }
+
+    public Restaurant getRestaurant(ObjectId uuid) {
+        log.debug("RestaurantController > getRestaurant({})", uuid);
+        return restaurants.get(uuid);
+    }
+
+    // update one restaurant
+    public void updateRestaurant(@Nonnull Restaurant restaurant) throws Exception {
+        log.debug("RestaurantController > updateRestaurant");
+        restaurants.update(restaurant);
+    }
+
+    public void deleteRestaurant(@Nonnull ObjectId id) throws Exception {
+        log.debug("RestaurantController > deleteRestaurant");
+        restaurants.delete(id);
     }
 
     // restaurant can cancel order if it's just placed.
@@ -59,6 +82,7 @@ public class RestaurantController {
 
     // restaurant will call this function once food is ready for pickup
     public void notifyDriver(Order order) {
+        //        orderController.notifyDriver
         System.out.println("The order is ready for picked up!");
         order.setStatus(OrderStatus.READYFORPICKUP);
     }

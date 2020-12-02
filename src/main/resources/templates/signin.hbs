@@ -1,0 +1,130 @@
+{{> partials/header.hbs}}
+
+    <div id="authPage" class="">
+        <div class="signin-container justify-content-center">
+            <div class="card d-flex justify-content-center">
+                <div class="card-header">
+                    <h3>Sign In</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form class="form-signin" id="loginForm">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="inputUsername" class="form-control" name="username" placeholder="Username" required autofocus>
+
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="row">
+                            <div class="progress waitLogo" style="width:25%;height:20px;margin:auto; margin-top: 10px; margin-bottom: 10px;" hidden>
+                                <div class="progress-bar progress-bar-striped active" role="progressbar"  aria-valuenow="100" aria-valuemin="100"
+                                     aria-valuemax="100" style="width:100%; background-color:#104774;">
+                                    processing . . .
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-lg btn-primary float-right" type="submit">Sign in</button>
+                    </form>
+                </div>
+                <div class="card-footer ">
+                    <div class="d-flex justify-content-center links">
+                        Don't have an account? <a href="/signup">Sign Up</a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="/">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+    
+<script type="text/javascript">
+  
+$("document").ready(function() {
+    
+    $("#loginForm").on("submit", function(event) {
+      
+        event.preventDefault();
+        
+        $("#log").html("");
+        var email = $("#email").val();
+        var password = $("#password").val();
+        
+        
+        
+        $.ajax ({
+            type: "post",
+            url: "/login",
+            data: {"email":email},
+            success: function(response) {
+//                console.log("login success called");
+//                console.log("code = " + response.code + " status = " + response.status);
+//                console.log("resp = " + JSON.stringify(response));
+                    
+        //         var srpClient = new SRP6JavascriptClientSessionSHA256();
+		//
+		// srpClient.step1(email, password);
+		// var credentials = srpClient.step2(response.salt, response.B);
+		// password = credentials.M1 + ":" + credentials.A;
+                    //second ajax request
+                   $.ajax({
+                       type: "POST",
+                       url: "/auth",
+                       data: {"email":email,"password":password},
+                       success: function(res2) {
+                           //redirect to location in response;
+//                           console.log("resp2 location = " + res2.target);
+                           if(res2.target)
+                             window.location.href = res2.target;
+                        },
+                        error: function(error2) {
+//                            console.log("error2 called");
+//                            console.log("error " + JSON.stringify(error2));
+                            $("#log").html("<strong>Oops! Invalid Login Credentials </strong>");
+                        }
+                    });
+                
+             },
+            error: function(error) {
+//                console.log("login error () called");
+//                console.log("error raw = " + error);
+//                console.log("error stringify = " + JSON.stringify(error));
+                $("#log").html("<strong>Oops! Invalid Login Credentials! </strong>");
+         }
+        });
+    
+    });
+      
+     
+
+   
+ $(document).ajaxStart( function() { 
+    $(".progress").show();
+ });
+
+$(document).ajaxComplete( function () {
+    $(".progress").hide();
+});
+
+     
+     
+ });    
+</script>
+
+{{> partials/footer.hbs}}
