@@ -46,7 +46,7 @@ public class RestaurantController {
         ObjectId id = restaurant.getId();
         if (id != null && restaurants.get(id) != null) {
             // TODO exception
-            throw new Exception("Order existed");
+            throw new Exception("Restaurant existed");
         }
         return restaurants.add(restaurant);
     }
