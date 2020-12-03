@@ -55,8 +55,10 @@ public class RepositoryModule {
     public GenericRepository<Order> provideOrderRepository(MongoDBService mongoDBService) {
         return new MongoDBRepository<>(Order.class, mongoDBService);
     }
+
     @Provides
-    public GenericRepository<Restaurant> provideRestaurantRepository(MongoDBService mongoDBService) {
+    public GenericRepository<Restaurant> provideRestaurantRepository(
+            MongoDBService mongoDBService) {
         return new MongoDBRepository<>(Restaurant.class, mongoDBService);
     }
 
@@ -65,4 +67,3 @@ public class RepositoryModule {
         return new MongoDBRepository<>(Driver.class, mongoDBService);
     }
 }
-

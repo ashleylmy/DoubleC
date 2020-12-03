@@ -23,11 +23,4 @@ public class Order implements Model {
         this.dishOrder = dishOrder;
         this.totalCost = totalCost;
     }
-
-    @Override
-    public ObjectId getId() {
-        return null;
-
-    @Override
-    public void setId(ObjectId id) {}
 }
