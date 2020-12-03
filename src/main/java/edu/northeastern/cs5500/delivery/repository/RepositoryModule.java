@@ -22,6 +22,7 @@ public class RepositoryModule {
     public GenericRepository<Order> provideOrderRepository() {
         return new InMemoryRepository<>();
     }
+
 }
 
 /*
