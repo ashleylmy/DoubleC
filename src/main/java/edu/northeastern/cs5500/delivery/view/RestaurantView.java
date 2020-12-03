@@ -63,7 +63,7 @@ public class RestaurantView implements View {
 
         // Not include CRUD for restaurants
         //        // add new restaurant
-        //        // TODO not sure if this is neccessary
+        //        // TODO not sure if this is necessary
         //        post(
         //                "/restaurants/addNew",
         //                (request, response) -> {
