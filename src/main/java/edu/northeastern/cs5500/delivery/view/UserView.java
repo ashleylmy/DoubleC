@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.ModelAndView;
 import spark.Session;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 
 @Singleton
 @Slf4j
@@ -36,6 +38,7 @@ public class UserView implements View {
     public void register() {
         log.info("UserView > register");
 
+        // TODO check what does logger do
         Logger logger = LoggerFactory.getLogger(App.class);
 
         // make user is logged in
@@ -57,6 +60,7 @@ public class UserView implements View {
                 });
 
         // get specific user
+        // TODO current User?
         get(
                 "/user/:id",
                 (request, response) -> {
@@ -72,42 +76,47 @@ public class UserView implements View {
                 },
                 jsonTransformer);
 
-        // add new order
-        post(
-                "/user/:id/createOrder",
-                (request, response) -> {
-                    final String paramId = request.params(":id");
-                    log.debug("/user/:id<{}>", paramId);
-                    final ObjectId id = new ObjectId(paramId);
-                    User user = userController.getUser(id);
-                    double tip = Double.parseDouble(request.params("tip"));
-
-                    Order order = userController.orderGen(user, tip);
-                    response.redirect(String.format("/order/{}", order.getId().toHexString()), 301);
-                    return user;
-                });
-
-        // view all orders
-        get(
-                "/user/:id/orderHistory",
-                (request, response) -> {
-                    final String paramId = request.params(":id");
-                    log.debug("/user/:id<{}>", paramId);
-                    final ObjectId id = new ObjectId(paramId);
-                    User user = userController.getUser(id);
-                    response.type("application/json");
-                    return user.getOrderHistory();
-                },
-                jsonTransformer);
-
         // update user information
         put(
-                "/user/:id",
+                Path.Web.UPDATE,
                 (request, response) -> {
                     ObjectMapper mapper = new ObjectMapper();
                     User user = mapper.readValue(request.body(), User.class);
                     userController.updateUser(user);
+                    response.redirect("/user/:id", 301); // redirect to user page
                     return user;
                 });
+
+        // add new order, page will redirect to new order page
+        post(
+                Path.Web.CREATE_NEW_ORDER,
+                (request, response) -> {
+                    final String paramId = request.params(":id");
+                    log.debug("/user/:id<{}>", paramId);
+                    final ObjectId id = new ObjectId(paramId);
+                    User user = userController.getUser(id);
+                    double tip = Double.parseDouble(request.params("tip")); // add tip
+
+                    Order order = userController.orderGen(user, tip);
+                    response.redirect(String.format("/order/{}", order.getId().toHexString()), 301);
+                    return order;
+                });
+
+        // view all orders
+        get(
+                Path.Web.GET_ORDER_HISTORY,
+                (request, response) -> {
+                    return new ModelAndView(null, Path.Templates.ORDER_HISTORY) {};
+                },
+                new HandlebarsTemplateEngine());
+        //                    final String paramId = request.params(":id");
+        //                    log.debug("/user/:id<{}>", paramId);
+        //                    final ObjectId id = new ObjectId(paramId);
+        //                    User user = userController.getUser(id);
+        //                    response.type("application/json");
+        //                    return user.getOrderHistory();
+        //                },
+        //                jsonTransformer);
+
     }
 }

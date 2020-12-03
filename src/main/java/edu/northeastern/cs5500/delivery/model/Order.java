@@ -19,15 +19,14 @@ public class Order implements Model {
     private Restaurant restaurant;
     private int rating;
 
-    public Order() {}
-
-    public Order(
-            ObjectId orderId, ArrayList<FoodItem> dishOrder, User user, Restaurant restaurant) {
-        this.id = orderId;
+    public Order(ArrayList<FoodItem> dishOrder, Double totalCost) {
         this.dishOrder = dishOrder;
-        this.user = user;
-        this.restaurant = restaurant;
+        this.totalCost = totalCost;
     }
+
+    @Override
+    public ObjectId getId() {
+        return null;
 
     @Override
     public void setId(ObjectId id) {}

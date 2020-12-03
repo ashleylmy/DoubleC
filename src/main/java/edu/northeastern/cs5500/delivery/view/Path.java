@@ -2,10 +2,9 @@
 package edu.northeastern.cs5500.delivery.view;
 
 /**
- * Cited Path class, Needs modify
+ * Cited Path class with modification
  *
- * @author Seun Matt Date 13 Oct 2016 Year 2016 (c) SMATT Corporation
- *     <p>This is a class that will contain static strings for our paths
+ * <p>Origin @author Seun Matt Date 13 Oct 2016 Year 2016 (c) SMATT Corporation
  */
 public class Path {
 
@@ -14,27 +13,28 @@ public class Path {
 
     public static class Web {
 
-        //            this subclass holds the Web related static properties like routes
-        //            and others.
+        // this subclass holds the Web related static properties like routes
+        // and others.
+        // restaurants and home page would show same content
 
         public static String HOME = "/";
+        public static String RESTAURANTS = "/restaurants";
 
         //		log in routes
         public static String GET_LOGIN_PAGE = "/signin";
         public static String DO_LOGIN = "/signin";
         public static String LOGOUT = "/logout";
 
-        //		routes for performing crud on contact
-        public static String DASHBOARD = "/contacts/";
-        public static String DELETE = "/contact/:id"; // uses delete http method
-        public static String UPDATE =
-                "/contact/:id"; // uses put http method; data is contained in req body
-        public static String NEW =
-                "/contact/"; // uses post http method; data is contained in req body
-
-        //		routes for managing users / authentication
+        //		routes for performing crud on user
         public static String GET_SIGN_UP = "/signup"; // uses get method
         public static String DO_SIGN_UP = "/signup"; // uses post method
+        public static String UPDATE =
+                "/user/:id"; // uses put http method; data is contained in req body
+
+        public static String GET_ORDER_HISTORY = "/user/:id/orderHistory";
+
+        //		routes for managing users / authentication
+
         public static String NEW_USER = "/user"; // uses post method
         public static String UPDATE_PWD = "/s/user/:id"; // uses put method
 
@@ -46,27 +46,19 @@ public class Path {
         public static int SESSION_TIMEOUT = 60 * 30; // 30 mins
         public static String JSON_TYPE = "application/json";
         public static String AUTH_STATUS = "AUTH_STATUS";
+
+        // routes for managing orders
+        public static String CREATE_NEW_ORDER = "/user/:id/createOrder";
     }
 
     public static class Templates {
 
-        public static String INDEX = "index.hbs";
+        public static String ORDER_DETAIL = "orderDetail.hbs";
+        public static String INDEX = "index.hbs"; // main page with all restaurants
         public static String DASHBOARD = "main.hbs";
-        public static String LOGIN = "signin.hbs";
-        public static String SIGN_UP = "signup.hbs";
-    }
-
-    public static class Database {
-
-        public static String LOCAL_DBNAME = "contacts_db";
-        public static String HOST = "127.0.0.1";
-        public static int PORT = 27017;
-
-        // the db uri is from the heroku platform
-        public static String HEROKU_DB_URI =
-                "mongodb://heroku_n35m7bx6:vf99qjg9otp744biaqjtepvurd@ds011725.mlab.com:11725/heroku_n35m7bx6";
-        public static String HEROKU_DB_NAME =
-                "heroku_n35m7bx6"; // this is the last part of the HEROKU_DB_URI
+        public static String LOGIN = "signin.hbs"; // sign in page
+        public static String SIGN_UP = "signup.hbs"; // sign up page
+        public static String ORDER_HISTORY = "orderHistroy.hbs"; // order history
     }
 
     public static class Reply {
