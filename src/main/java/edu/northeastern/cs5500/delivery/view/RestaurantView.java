@@ -37,7 +37,7 @@ public class RestaurantView implements View {
                 new HandlebarsTemplateEngine());
 
         get(
-                "/",
+                "/restaurants",
                 (request, response) -> {
                     log.debug("/restaurants");
                     response.type("application/json");
