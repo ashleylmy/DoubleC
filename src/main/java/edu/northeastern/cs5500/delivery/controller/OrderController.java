@@ -105,4 +105,9 @@ public class OrderController {
             System.out.println("User just cancelled order.");
         }
     }
+
+    // ** to do get order by order id */
+    public Order getOrder(ObjectId id) {
+        return orders.get(id);
+    }
 }
