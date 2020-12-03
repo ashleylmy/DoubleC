@@ -105,6 +105,7 @@ public class UserController {
     public Order orderGen(User user, Double tip) throws Exception {
         // add shopping cart to order
         Order newOrder = orderController.generateOrder(user.getCart());
+        newOrder.setUser(user);
         // adding tip to total cost
         newOrder.setTotalCost(newOrder.getTotalCost() + tip);
         // adding Payment method

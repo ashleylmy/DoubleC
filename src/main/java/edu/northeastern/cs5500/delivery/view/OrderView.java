@@ -5,11 +5,15 @@ import static spark.Spark.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.OrderController;
+import edu.northeastern.cs5500.delivery.controller.UserController;
 import edu.northeastern.cs5500.delivery.model.Order;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
+
 
 @Singleton
 @Slf4j
@@ -21,6 +25,7 @@ public class OrderView implements View {
     @Inject JsonTransformer jsonTransformer;
 
     @Inject OrderController orderController;
+    @Inject UserController userController;
 
     @Override
     public void register() {
@@ -33,17 +38,16 @@ public class OrderView implements View {
                 (request, response) -> {
                     final String paramId = request.params(":id");
                     log.debug("/order/:id<{}>", paramId);
-                    final ObjectId id = new ObjectId(paramId);
-                    Order order = orderController.getOrder(id);
+                    ObjectId id = new ObjectId(paramId);
+                    Order order = orderController.getOrderById(id);
                     if (order == null) {
                         halt(404, "Not existing");
                     }
-                    response.type("application/json");
-                    return order;
+                    return new ModelAndView(null, Path.Templates.ORDER_DETAIL) {};
                 },
-                jsonTransformer);
+                new HandlebarsTemplateEngine());
 
-        // TODO check if redirect needed
+
         // put order status (different order status: prepared, delivered)
         put(
                 "/order/cancel",
@@ -78,6 +82,7 @@ public class OrderView implements View {
         // put("delivered")
         put(
                 "/order/delivered",
+
                 (request, response) -> {
                     ObjectMapper mapper = new ObjectMapper();
                     Order order = mapper.readValue(request.body(), Order.class);

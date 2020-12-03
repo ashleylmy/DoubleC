@@ -16,25 +16,26 @@ import org.bson.types.ObjectId;
 public class OrderController {
     private GenericRepository<Order> orders;
 
+    // get order database
     @Inject
     OrderController(GenericRepository<Order> orders) {
         this.orders = orders;
-        log.debug("OrderController->constructor");
-        if (orders.count() > 0) {
-            return;
-        }
-        log.info("OrderController > construct > adding default order");
-
-        final Order order1 = new Order();
-        final Order order2 = new Order();
-
-        try {
-            addOrder(order1);
-            addOrder(order2);
-        } catch (Exception e) {
-            log.error("OrderController > construct > adding default orders > failure?");
-            e.printStackTrace();
-        }
+        //        log.debug("OrderController->constructor");
+        //        if (orders.count() > 0) {
+        //            return;
+        //        }
+        //        log.info("OrderController > construct > adding default order");
+        //
+        //        final Order order1 = new Order();
+        //        final Order order2 = new Order();
+        //
+        //        try {
+        //            addOrder(order1);
+        //            addOrder(order2);
+        //        } catch (Exception e) {
+        //            log.error("OrderController > construct > adding default orders > failure?");
+        //            e.printStackTrace();
+        //        }
     }
     // adding a new order to the orders database
     @Nonnull
@@ -48,15 +49,16 @@ public class OrderController {
         return orders.add(order);
     }
 
+    // ** to do get order by order id */
+    public Order getOrderById(ObjectId id) {
+        return orders.get(id);
+    }
+
     // generate a partial order with food items and cost. User need to finish adding tip, address
     // and payment
     public Order generateOrder(ArrayList<FoodItem> foodItems) {
-        Order newOrder = new Order();
-        for (FoodItem item : foodItems) {
-            newOrder.getDishOrder().add(item);
-        }
-        newOrder.setTotalCost(calculateSubtotal(foodItems));
-        return newOrder;
+        Double subtotal = calculateSubtotal(foodItems);
+        return new Order(foodItems, subtotal);
     }
 
     // calculate the subtotal of an order.

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import spark.ModelAndView;
+import spark.Session;
 import spark.TemplateEngine.*;
 import spark.template.handlebars.*;
 
@@ -43,6 +44,7 @@ public class AuthView implements View {
                 new HandlebarsTemplateEngine());
 
         // POST - Add an user to DB and redirect back to main page(restaurants page)
+        // TODO check if user exist
         post(
                 Path.Web.DO_SIGN_UP,
                 (request, response) -> {
@@ -53,18 +55,34 @@ public class AuthView implements View {
                     User user = new User(email, password, username);
                     userController.addUser(user);
                     response.status(201); // 201 Created
-                    response.redirect("/delivery", 301); // redirect to main page
+                    response.redirect("/", 301); // redirect to main page
                     return user;
                 });
 
         // handle user Login
+
         get(
                 Path.Web.GET_LOGIN_PAGE,
                 (request, response) -> {
                     return new ModelAndView(null, Path.Templates.LOGIN);
                 },
                 new HandlebarsTemplateEngine());
-        //        post("/login", (request, response) -> {})
 
+        // TODO authentication
+        post(
+                Path.Web.DO_LOGIN,
+                (request, response) -> {
+                    return "login successful";
+                });
+
+        // handle logout
+        get(
+                Path.Web.LOGOUT,
+                (request, response) -> {
+                    Session session = request.session(false);
+                    if (session != null) session.invalidate();
+                    response.redirect(Path.Web.HOME);
+                    return response;
+                });
     }
 }
