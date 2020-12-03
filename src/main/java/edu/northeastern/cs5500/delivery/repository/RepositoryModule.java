@@ -56,14 +56,9 @@ public class RepositoryModule {
         return new MongoDBRepository<>(Order.class, mongoDBService);
     }
 
-}
-
-/*
-// Here's an example of how you imght swap out the in-memory repository for a database-backed
-// repository:
-
     @Provides
-    public GenericRepository<Restaurant> provideRestaurantRepository(MongoDBService mongoDBService) {
+    public GenericRepository<Restaurant> provideRestaurantRepository(
+            MongoDBService mongoDBService) {
         return new MongoDBRepository<>(Restaurant.class, mongoDBService);
     }
 

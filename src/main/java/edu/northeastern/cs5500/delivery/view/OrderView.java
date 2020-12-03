@@ -14,7 +14,6 @@ import org.bson.types.ObjectId;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-
 @Singleton
 @Slf4j
 public class OrderView implements View {
@@ -46,7 +45,6 @@ public class OrderView implements View {
                     return new ModelAndView(null, Path.Templates.ORDER_DETAIL) {};
                 },
                 new HandlebarsTemplateEngine());
-
 
         // put order status (different order status: prepared, delivered)
         put(
@@ -82,7 +80,6 @@ public class OrderView implements View {
         // put("delivered")
         put(
                 "/order/delivered",
-
                 (request, response) -> {
                     ObjectMapper mapper = new ObjectMapper();
                     Order order = mapper.readValue(request.body(), Order.class);
