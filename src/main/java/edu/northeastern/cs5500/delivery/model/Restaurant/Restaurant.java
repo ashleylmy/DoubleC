@@ -22,17 +22,17 @@ public class Restaurant implements Model {
         this.name = name;
     }
 
-    public Double getRating() {
-        int orderHasRating = 0;
-        Double totalRating = 0.0;
-        for (Order existingOrder : this.getOrderHistory()) {
-            if (existingOrder.getRating() > 0) {
-                orderHasRating += 1;
-                totalRating += existingOrder.getRating();
-            }
-        }
-        return totalRating / orderHasRating;
-    }
+    //    public Double getRating() {
+    //        int orderHasRating = 0;
+    //        Double totalRating = 0.0;
+    //        for (Order existingOrder : this.getOrderHistory()) {
+    //            if (existingOrder.getRating() > 0) {
+    //                orderHasRating += 1;
+    //                totalRating += existingOrder.getRating();
+    //            }
+    //        }
+    //        return totalRating / orderHasRating;
+    //    }
 
     @Override
     public ObjectId getId() {

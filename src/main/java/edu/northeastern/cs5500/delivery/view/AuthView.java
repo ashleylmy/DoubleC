@@ -11,7 +11,6 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import spark.ModelAndView;
 import spark.Session;
-import spark.TemplateEngine.*;
 import spark.template.handlebars.*;
 
 @Singleton
@@ -72,7 +71,12 @@ public class AuthView implements View {
         post(
                 Path.Web.DO_LOGIN,
                 (request, response) -> {
-                    return "login successful";
+                    String email=request.params("email");
+                    if(email != null && !email.isEmpty()) {
+                        //do something to check password
+                        response.redirect("/", 301);
+                        return "login successful";}
+                    return "error";
                 });
 
         // handle logout
