@@ -5,6 +5,7 @@ import static spark.Spark.*;
 import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.RestaurantController;
 import edu.northeastern.cs5500.delivery.model.Restaurant.Restaurant;
+import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,11 @@ public class RestaurantView implements View {
         get(
                 Path.Web.HOME,
                 (request, response) -> {
+                    HashMap<String, Object> model = new HashMap<>();
+                    model.put("restaurants", restaurantController.getAllRestaurants());
                     log.debug("home page");
-                    return new ModelAndView(null, Path.Templates.INDEX) {};
+
+                    return new ModelAndView(model, Path.Templates.INDEX) {};
                 },
                 new HandlebarsTemplateEngine());
 

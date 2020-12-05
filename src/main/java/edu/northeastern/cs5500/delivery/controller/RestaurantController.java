@@ -29,8 +29,8 @@ public class RestaurantController {
         }
         log.info("RestaurantController > construct > adding default restaurants with name");
 
-        final Restaurant restaurant1 = new Restaurant("KFC");
-        final Restaurant restaurant2 = new Restaurant("McDonald");
+        final Restaurant restaurant1 = new Restaurant();
+        final Restaurant restaurant2 = new Restaurant();
 
         try {
             addRestaurant(restaurant1);

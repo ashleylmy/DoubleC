@@ -12,15 +12,16 @@ import org.bson.types.ObjectId;
 public class Restaurant implements Model {
     private ObjectId id;
     private String name;
-    private String category;
+    private String cuisine;
+    private String image;
     private ArrayList<FoodItem> Menu;
     private LocalDate businessHours;
     private ArrayList<Order> orderHistory;
     private Double rating;
 
-    public Restaurant(String name) {
-        this.name = name;
-    }
+    //    public Restaurant(String name) {
+    //        this.name = name;
+    //    }
 
     //    public Double getRating() {
     //        int orderHasRating = 0;

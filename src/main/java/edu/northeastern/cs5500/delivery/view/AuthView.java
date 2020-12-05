@@ -71,11 +71,12 @@ public class AuthView implements View {
         post(
                 Path.Web.DO_LOGIN,
                 (request, response) -> {
-                    String email=request.params("email");
-                    if(email != null && !email.isEmpty()) {
-                        //do something to check password
+                    String email = request.params("email");
+                    if (email != null && !email.isEmpty()) {
+                        // do something to check password
                         response.redirect("/", 301);
-                        return "login successful";}
+                        return "login successful";
+                    }
                     return "error";
                 });
 
