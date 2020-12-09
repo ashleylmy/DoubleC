@@ -79,9 +79,12 @@ shadowJar.mustRunAfter clean
 // Force all builds to be clean builds due to Dagger problems
 build.mustRunAfter clean
 build.dependsOn += 'clean'
+build.dependsOn += 'spotlessApply'
 
 run.mustRunAfter clean
 run.dependsOn += 'clean'
+run.dependsOn += 'spotlessApply'
+
 
 // Target Java 1.11 - make sure system.properties matches this as well
 sourceCompatibility = 1.11

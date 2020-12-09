@@ -4,6 +4,7 @@ import edu.northeastern.cs5500.delivery.model.*;
 import edu.northeastern.cs5500.delivery.model.user.Payment;
 import edu.northeastern.cs5500.delivery.model.user.User;
 import edu.northeastern.cs5500.delivery.repository.GenericRepository;
+import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,6 +16,7 @@ import org.bson.types.ObjectId;
 public class UserController {
     // collection of user User DB
     // all the users need to user the same user controller
+
     private final GenericRepository<User> users;
 
     @Inject OrderController orderController;
@@ -22,27 +24,6 @@ public class UserController {
     @Inject
     UserController(GenericRepository<User> userRepository) {
         this.users = userRepository;
-
-        log.info("UserController > construct");
-
-        if (users.count() > 0) {
-            return;
-        }
-
-        log.info(
-                "UserController > construct > adding default Users with email, password and userName");
-
-        final User userSample1 = new User("pparker@mail.com", "spider man", "PParker");
-
-        final User userSample2 = new User("tspark@mail.com", "iron man", "TSpark");
-
-        try {
-            addUser(userSample1);
-            addUser(userSample2);
-        } catch (Exception e) {
-            log.error("UserController > construct > adding default users > failure?");
-            e.printStackTrace();
-        }
     }
 
     // adding a new user to the users database
@@ -50,11 +31,31 @@ public class UserController {
     public User addUser(@Nonnull User user) throws Exception {
         log.debug("UserController > addUser(...)");
         ObjectId id = user.getId();
-        if (id != null && users.get(id) != null) {
+        if(existUser(user.getEmail())) throw new Exception("Email registered");
+        if (id != null && users.get(id) != null ) {
             // TODO exception
+            log.debug("UserController > addUser> ID existed");
             throw new Exception("UserID existed");
         }
         return users.add(user);
+    }
+
+    @Nonnull
+    public Boolean existUser(String email) {
+        Collection<User> dbUser = users.getAll();
+        for (User user : dbUser) {
+            if (user.getEmail().equals(email) ) return true;
+        }
+        return false;
+    }
+
+    @Nonnull
+    public Boolean validUser(String email, String password) {
+        Collection<User> dbUser = users.getAll();
+        for (User user : dbUser) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(password)) return true;
+        }
+        return false;
     }
 
     // -----------------------------------get user by uuid--------------------------------------//

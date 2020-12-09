@@ -53,6 +53,7 @@ public class Path {
 
     public static class Templates {
 
+        public static String MENU = "menu.hbs";
         public static String ORDER_DETAIL = "orderDetail.hbs";
         public static String INDEX = "index.hbs"; // main page with all restaurants
         public static String DASHBOARD = "main.hbs";

@@ -1,0 +1,31 @@
+{{> partials/header.hbs}}
+<!--//for each restaurant, create a thumbnail to show name, pic, button to direct for details-->
+<div class="container">
+    <div class="row d-flex flex-wrap">
+        <div class="card">
+            <img id="showImage" src="{{restaurant.image}}" class="rounded img-fluid campground">
+            <div class="caption-full">
+                <a href=""><h3>{{restaurant.name}}</h3></a>
+            </div>
+        </div>
+        <hr>
+        <div class="card">
+            {{#each restaurant.menu}}
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <img class="card-img-top" src="{{this.imageUrl}}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.name}}</h5>
+                        </div>
+                    </div>
+
+                </div>
+            {{/each}}
+
+        </div>
+    </div>
+
+</div>
+
+{{>partials/footer.hbs}}
+

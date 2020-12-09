@@ -19,6 +19,8 @@ public class App {
     public static void main(String[] arg) {
 
         Logger logger = LoggerFactory.getLogger(App.class);
+        externalStaticFileLocation("/var/www/public");
+        // externalStaticFileLocation("src/main/resources/public");
         staticFileLocation("/public");
 
         // run on port 5000

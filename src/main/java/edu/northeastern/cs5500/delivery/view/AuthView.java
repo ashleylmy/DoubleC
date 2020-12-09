@@ -1,8 +1,5 @@
 package edu.northeastern.cs5500.delivery.view;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-
 import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.UserController;
 import edu.northeastern.cs5500.delivery.model.user.User;
@@ -10,18 +7,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import spark.ModelAndView;
+import spark.Redirect;
 import spark.Session;
 import spark.template.handlebars.*;
+
+import java.lang.reflect.ParameterizedType;
+
+import static spark.Spark.*;
 
 @Singleton
 @Slf4j
 public class AuthView implements View {
-
-    //    POST /signup - POST request to add an user.
-    //    GET /user/:id - GET request to get user by :id.
-    //    GET /user - GET request to get all the users.
-    //    PUT /user/:id - UPDATE request to update an user by :id.
-    //    DELETE /user/:id - DELETE request to delete an user by :id.
 
     @Inject
     AuthView() {}
@@ -43,23 +39,23 @@ public class AuthView implements View {
                 new HandlebarsTemplateEngine());
 
         // POST - Add an user to DB and redirect back to main page(restaurants page)
-        // TODO check if user exist
         post(
                 Path.Web.DO_SIGN_UP,
                 (request, response) -> {
-                    response.type(Path.Web.JSON_TYPE); // set our response type
                     String username = request.queryParams("username");
                     String email = request.queryParams("email");
                     String password = request.queryParams("password");
-                    User user = new User(email, password, username);
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setPassword(password);
+                    user.setUserName(username);
                     userController.addUser(user);
-                    response.status(201); // 201 Created
-                    response.redirect("/", 301); // redirect to main page
+                    //TODO redirect doesn't work
+                    response.redirect(Path.Web.HOME, 301);
                     return user;
                 });
 
         // handle user Login
-
         get(
                 Path.Web.GET_LOGIN_PAGE,
                 (request, response) -> {
@@ -67,20 +63,32 @@ public class AuthView implements View {
                 },
                 new HandlebarsTemplateEngine());
 
-        // TODO authentication
+        // check if email and password matches entry in database
         post(
                 Path.Web.DO_LOGIN,
                 (request, response) -> {
-                    String email = request.params("email");
+                    String email = request.queryParams("email");
+                    String password = request.queryParams("password");
+                    log.info(email+password);
                     if (email != null && !email.isEmpty()) {
                         // do something to check password
-                        response.redirect("/", 301);
-                        return "login successful";
+                        if (userController.validUser(email, password)) {
+                            log.info("login successful");
+                            //TODO redirect doesn't work
+                            response.redirect(Path.Web.HOME, 301);
+                            return "login successful";
+                        } else {
+                            log.info("can't find email/password in database");
+                            response.status(404);
+                            return "can't find email/password in database";
+                        }
                     }
-                    return "error";
+                    response.status(404);
+                    return "please enter valid email and password";
                 });
 
         // handle logout
+        // TODO not link for log out yet. Need to figure out navbar toggle
         get(
                 Path.Web.LOGOUT,
                 (request, response) -> {

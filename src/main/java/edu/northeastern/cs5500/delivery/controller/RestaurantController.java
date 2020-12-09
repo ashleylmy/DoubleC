@@ -23,22 +23,6 @@ public class RestaurantController {
     @Inject
     public RestaurantController(GenericRepository<Restaurant> restaurants) {
         this.restaurants = restaurants;
-        log.debug("RestaurantController->constructor");
-        if (restaurants.count() > 0) {
-            return;
-        }
-        log.info("RestaurantController > construct > adding default restaurants with name");
-
-        final Restaurant restaurant1 = new Restaurant();
-        final Restaurant restaurant2 = new Restaurant();
-
-        try {
-            addRestaurant(restaurant1);
-            addRestaurant(restaurant2);
-        } catch (Exception e) {
-            log.error("RestaurantController > construct > adding default restuarants > failure?");
-            e.printStackTrace();
-        }
     }
 
     @Nonnull

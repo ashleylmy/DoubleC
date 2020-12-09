@@ -14,7 +14,7 @@ public class Restaurant implements Model {
     private String name;
     private String cuisine;
     private String image;
-    private ArrayList<FoodItem> Menu;
+    private ArrayList<FoodItem> menu;
     private LocalDate businessHours;
     private ArrayList<Order> orderHistory;
     private Double rating;
@@ -34,12 +34,14 @@ public class Restaurant implements Model {
     //        }
     //        return totalRating / orderHasRating;
     //    }
-
-    @Override
-    public ObjectId getId() {
-        return null;
-    }
-
-    @Override
-    public void setId(ObjectId id) {}
+    //
+    //    @Override
+    //    public ObjectId getId() {
+    //        return null;
+    //    }
+    //
+    //    @Override
+    //    public void setId(ObjectId id) {
+    //
+    //    }
 }

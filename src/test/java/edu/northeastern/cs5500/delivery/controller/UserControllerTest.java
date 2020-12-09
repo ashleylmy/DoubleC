@@ -7,9 +7,6 @@ class UserControllerTest {
     // default user for testing.
     // TODO need to add order and shopping cart for testing
 
-    final User defaultUser1 = new User("tstark@mail.com", "iron man", "Tony Stark");
-    final User defaultUser2 = new User("pparker@mail.com", "spider man", "Peter Parker");
-
     @Test
     void getOrderHistory() {}
 

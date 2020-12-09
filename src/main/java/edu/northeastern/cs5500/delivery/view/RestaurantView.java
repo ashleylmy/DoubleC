@@ -34,8 +34,8 @@ public class RestaurantView implements View {
                 (request, response) -> {
                     HashMap<String, Object> model = new HashMap<>();
                     model.put("restaurants", restaurantController.getAllRestaurants());
-                    log.debug("home page");
-
+                    log.info("home page");
+                    log.info(model.toString());
                     return new ModelAndView(model, Path.Templates.INDEX) {};
                 },
                 new HandlebarsTemplateEngine());
@@ -44,26 +44,25 @@ public class RestaurantView implements View {
                 "/restaurants",
                 (request, response) -> {
                     log.debug("/restaurants");
-                    response.type("application/json");
-                    return restaurantController.getAllRestaurants();
-                },
-                jsonTransformer);
+                    response.redirect("/", 301);
+                    return "show restaurants";
+                });
 
         // got to a specific restaurant after user clicked from main page
         get(
                 "/restaurants/:id",
                 (request, response) -> {
                     final String paramId = request.params(":id");
-                    log.debug("/restaurants/:id<{}>", paramId);
+                    log.info(paramId);
                     final ObjectId id = new ObjectId(paramId);
+                    log.info(id.toString());
                     Restaurant restaurant = restaurantController.getRestaurant(id);
-                    if (restaurant == null) {
-                        halt(404);
-                    }
-                    response.type("application/json");
-                    return restaurant;
+                    HashMap<String, Object> model = new HashMap<>();
+                    model.put("restaurant", restaurant);
+                    log.info(restaurant.getMenu().toString());
+                    return new ModelAndView(model, Path.Templates.MENU) {};
                 },
-                jsonTransformer);
+                new HandlebarsTemplateEngine());
 
         // Not include CRUD for restaurants
         //        // add new restaurant

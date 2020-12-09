@@ -26,6 +26,12 @@ public class ViewModule {
 
     @Provides
     @IntoSet
+    public View provideAuthView(AuthView authView) {
+        return authView;
+    }
+
+    @Provides
+    @IntoSet
     public View provideRestaurantView(RestaurantView restaurantView) {
         return restaurantView;
     }

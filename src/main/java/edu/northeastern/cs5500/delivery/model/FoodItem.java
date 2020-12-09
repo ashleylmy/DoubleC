@@ -4,8 +4,10 @@ import lombok.Data;
 
 @Data
 public class FoodItem {
-    private int price, quantity;
+    private Double price;
+    private int quantity;
     private String name;
     // Should Food Item have restaurant attribute?
+    private String imageUrl;
     private String restaurant; // need to have restaurant class
 }
