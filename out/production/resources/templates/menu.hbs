@@ -1,31 +1,70 @@
 {{> partials/header.hbs}}
-<!--//for each restaurant, create a thumbnail to show name, pic, button to direct for details-->
+
+
+
+<header class="jumbotron menu" style="background-image:url({{restaurant.image}}); background-size: cover;">
+    <h1 class="display-4">{{restaurant.name}}</h1>
+</header>
+
 <div class="container">
-    <div class="row d-flex flex-wrap">
-        <div class="card">
-            <img id="showImage" src="{{restaurant.image}}" class="rounded img-fluid campground">
-            <div class="caption-full">
-                <a href=""><h3>{{restaurant.name}}</h3></a>
-            </div>
-        </div>
-        <hr>
-        <div class="card">
-            {{#each restaurant.menu}}
-                <div class="col-md-3 col-sm-6">
-                    <div class="card">
-                        <img class="card-img-top" src="{{this.imageUrl}}" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">{{this.name}}</h5>
+    <div class="row d-flex flex-wrap" id="menu_item">
+        {{#each restaurant.menu}}
+            <div class="col-md-3 col-sm-6">
+                <div class="card" id="food_item">
+                    <img class="card-img-top embed-responsive-item" src="{{this.imageUrl}}" alt="Card image cap">
+                    <div class="card-body">
+                        <div class="card-title"><h5 class="float-left">{{this.name}}</h5>
+                            <p class="text-right">$ {{this.price}}</p></div>
+                        <div class="row d-flex col-qty justify-content-md-center">
+                            <a href="#" class="qty qty-minus"><i class="fas fa-minus-circle"></i></a>
+                            <input type="numeric" value="0"/>
+                            <a href="#" class="qty qty-plus"><i class="fas fa-plus-circle"></i></a>
                         </div>
                     </div>
-
                 </div>
-            {{/each}}
 
-        </div>
+            </div>
+        {{/each}}
+
     </div>
-
 </div>
 
-{{>partials/footer.hbs}}
+<div class="container">
+    <div class="row d-flex flex-wrap" id="checkout_bar">
+</div>
+</div>
 
+<!--js for quantity plus and minus button-->
+<script type="text/javascript">
+    $('a.qty-minus').on('click', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var $input = $this.closest('div').find('input');
+        var value = parseInt($input.val());
+
+        if (value > 1) {
+            value = value - 1;
+        } else {
+            value = 0;
+        }
+
+        $input.val(value);
+
+    });
+    $('a.qty-plus').on('click', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var $input = $this.closest('div').find('input');
+        var value = parseInt($input.val());
+
+        if (value < 100) {
+            value = value + 1;
+        } else {
+            value = 100;
+        }
+
+        $input.val(value);
+    });
+</script>
+
+{{> partials/footer.hbs}}

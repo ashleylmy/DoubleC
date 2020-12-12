@@ -32,12 +32,14 @@
             </li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
+            {{#if getSession}}
             <li class="nav-item">
                 <a class="nav-link" href="/signin">Login <span class="sr-only"></span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/signup">SignUp <span class="sr-only"></span></a>
             </li>
+            {{/if}}
 <!--            <li>-->
 <!--                <a class="nav-link" href="#">Signed in as <%= currentUser.username %><span class="sr-only"></span></a>-->
 

@@ -50,6 +50,7 @@ public class AuthView implements View {
                     user.setPassword(password);
                     user.setUserName(username);
                     userController.addUser(user);
+                    Session session = request.session(true);
                     //TODO redirect doesn't work
                     response.redirect(Path.Web.HOME, 301);
                     return user;
@@ -75,6 +76,12 @@ public class AuthView implements View {
                         if (userController.validUser(email, password)) {
                             log.info("login successful");
                             //TODO redirect doesn't work
+                            Session session = request.session(true);
+                            User user=userController.existUser(email);
+                            log.info(user.toString());
+                            session.attribute(Path.Web.ATTR_USER_NAME, user.getUserName());
+                            session.attribute(Path.Web.ATTR_USER_ID, user.getId().toString()); //saves the id as String
+                            session.attribute(Path.Web.ATTR_EMAIL, user.getEmail());
                             response.redirect(Path.Web.HOME, 301);
                             return "login successful";
                         } else {

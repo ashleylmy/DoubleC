@@ -8,16 +8,20 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 
 @Singleton
 @Slf4j
+@Data
 public class UserController {
     // collection of user User DB
     // all the users need to user the same user controller
 
     private final GenericRepository<User> users;
+    public User currentUser;
 
     @Inject OrderController orderController;
 
@@ -31,7 +35,7 @@ public class UserController {
     public User addUser(@Nonnull User user) throws Exception {
         log.debug("UserController > addUser(...)");
         ObjectId id = user.getId();
-        if(existUser(user.getEmail())) throw new Exception("Email registered");
+        if(existUser(user.getEmail())!=null) throw new Exception("Email registered");
         if (id != null && users.get(id) != null ) {
             // TODO exception
             log.debug("UserController > addUser> ID existed");
@@ -41,12 +45,15 @@ public class UserController {
     }
 
     @Nonnull
-    public Boolean existUser(String email) {
+    public User existUser(String email) {
         Collection<User> dbUser = users.getAll();
         for (User user : dbUser) {
-            if (user.getEmail().equals(email) ) return true;
+            if (user.getEmail().equals(email) ) {
+                currentUser=user;
+                return user;
+            }
         }
-        return false;
+        return new User();
     }
 
     @Nonnull
@@ -166,4 +173,6 @@ public class UserController {
         log.debug("UserController > updateUser(...)");
         users.update(user);
     }
+
+
 }
