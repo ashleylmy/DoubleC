@@ -35,16 +35,4 @@ public class ViewModule {
     public View provideRestaurantView(RestaurantView restaurantView) {
         return restaurantView;
     }
-
-    @Provides
-    @IntoSet
-    public View provideShoppingCartView(ShoppingCartView shoppingCartView) {
-        return shoppingCartView;
-    }
-
-    @Provides
-    @IntoSet
-    public View provideOrderView(OrderView orderView) {
-        return orderView;
-    }
 }

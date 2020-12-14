@@ -1,7 +1,5 @@
 package edu.northeastern.cs5500.delivery.view;
 
-import static spark.Spark.*;
-
 import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.UserController;
 import edu.northeastern.cs5500.delivery.model.user.User;
@@ -9,8 +7,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import spark.ModelAndView;
+import spark.Redirect;
 import spark.Session;
 import spark.template.handlebars.*;
+
+import java.lang.reflect.ParameterizedType;
+
+import static spark.Spark.*;
 
 @Singleton
 @Slf4j
@@ -47,8 +50,8 @@ public class AuthView implements View {
                     user.setPassword(password);
                     user.setUserName(username);
                     userController.addUser(user);
-                    //                    Session session = request.session(true);
-                    // TODO redirect doesn't work
+                    Session session = request.session(true);
+                    //TODO redirect doesn't work
                     response.redirect(Path.Web.HOME, 301);
                     return user;
                 });
@@ -67,23 +70,19 @@ public class AuthView implements View {
                 (request, response) -> {
                     String email = request.queryParams("email");
                     String password = request.queryParams("password");
-                    log.info(email + password);
+                    log.info(email+password);
                     if (email != null && !email.isEmpty()) {
                         // do something to check password
                         if (userController.validUser(email, password)) {
                             log.info("login successful");
+                            //TODO redirect doesn't work
                             Session session = request.session(true);
-                            User user = userController.getUserByEmail(email);
+                            User user=userController.existUser(email);
                             log.info(user.toString());
                             session.attribute(Path.Web.ATTR_USER_NAME, user.getUserName());
-                            session.attribute(
-                                    Path.Web.ATTR_USER_ID,
-                                    user.getId().toString()); // saves the id as String
+                            session.attribute(Path.Web.ATTR_USER_ID, user.getId().toString()); //saves the id as String
                             session.attribute(Path.Web.ATTR_EMAIL, user.getEmail());
-                            session.attribute("cart", user.getCart());
-                            log.info("cart" + session.attribute("cart"));
-                            log.info(session.attribute(Path.Web.ATTR_USER_NAME));
-                            // response.redirect(Path.Web.HOME, 301);
+                            response.redirect(Path.Web.HOME, 301);
                             return "login successful";
                         } else {
                             log.info("can't find email/password in database");
@@ -102,7 +101,7 @@ public class AuthView implements View {
                 (request, response) -> {
                     Session session = request.session(false);
                     if (session != null) session.invalidate();
-                    response.redirect(Path.Web.HOME, 301);
+                    response.redirect(Path.Web.HOME);
                     return response;
                 });
     }

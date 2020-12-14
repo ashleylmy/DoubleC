@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -34,8 +35,8 @@ public class UserController {
     public User addUser(@Nonnull User user) throws Exception {
         log.debug("UserController > addUser(...)");
         ObjectId id = user.getId();
-        if (getUserByEmail(user.getEmail()).getId() != id) throw new Exception("Email registered");
-        if (id != null && users.get(id) != null) {
+        if(existUser(user.getEmail())!=null) throw new Exception("Email registered");
+        if (id != null && users.get(id) != null ) {
             // TODO exception
             log.debug("UserController > addUser> ID existed");
             throw new Exception("UserID existed");
@@ -44,11 +45,11 @@ public class UserController {
     }
 
     @Nonnull
-    public User getUserByEmail(String email) {
+    public User existUser(String email) {
         Collection<User> dbUser = users.getAll();
         for (User user : dbUser) {
-            if (user.getEmail().equals(email)) {
-                currentUser = user;
+            if (user.getEmail().equals(email) ) {
+                currentUser=user;
                 return user;
             }
         }
@@ -77,8 +78,6 @@ public class UserController {
     // TODO check if user param can be used directly or needed to find user by getUser(uuid)
 
     private boolean validAdding(User user, FoodItem item) {
-        log.info("validing item"+user.toString());
-        log.info(item.toString());
         if (user.getCart().isEmpty()) return true;
         String curSavedRestaurant = user.getCart().get(0).getRestaurant();
         return curSavedRestaurant.equals(item.getRestaurant());
@@ -89,11 +88,10 @@ public class UserController {
         log.debug("UserController > adding item to shopping cart...");
         if (validAdding(user, item)) {
             user.getCart().add(item);
-            users.update(user);
         } else {
             // pop up window ask user to choose if clear cart and then add item
-            discardCurCart(user);
-            addItemToCart(user, item);
+            log.debug("the item belongs to different restaurant");
+            System.out.println("Discard existing Items first");
         }
     }
     // delete item
@@ -111,14 +109,13 @@ public class UserController {
         user.getPaymentMethods().add(newPayment);
     }
 
-
-
     // add selected food to new order and set delivery address, payment info.
-    public Order orderGen(User user) throws Exception {
+    public Order orderGen(User user, Double tip) throws Exception {
         // add shopping cart to order
         Order newOrder = orderController.generateOrder(user.getCart());
         newOrder.setUser(user);
         // adding tip to total cost
+        newOrder.setTotalCost(newOrder.getTotalCost() + tip);
         // adding Payment method
         newOrder.setPaymentMethod(checkPayment(user));
         // adding delivery address
@@ -176,4 +173,6 @@ public class UserController {
         log.debug("UserController > updateUser(...)");
         users.update(user);
     }
+
+
 }

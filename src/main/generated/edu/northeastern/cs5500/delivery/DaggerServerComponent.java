@@ -32,12 +32,8 @@ import edu.northeastern.cs5500.delivery.view.AuthView;
 import edu.northeastern.cs5500.delivery.view.AuthView_Factory;
 import edu.northeastern.cs5500.delivery.view.DeliveryView;
 import edu.northeastern.cs5500.delivery.view.DeliveryView_Factory;
-import edu.northeastern.cs5500.delivery.view.OrderView;
-import edu.northeastern.cs5500.delivery.view.OrderView_Factory;
 import edu.northeastern.cs5500.delivery.view.RestaurantView;
 import edu.northeastern.cs5500.delivery.view.RestaurantView_Factory;
-import edu.northeastern.cs5500.delivery.view.ShoppingCartView;
-import edu.northeastern.cs5500.delivery.view.ShoppingCartView_Factory;
 import edu.northeastern.cs5500.delivery.view.StatusView;
 import edu.northeastern.cs5500.delivery.view.StatusView_Factory;
 import edu.northeastern.cs5500.delivery.view.UserView;
@@ -46,9 +42,7 @@ import edu.northeastern.cs5500.delivery.view.View;
 import edu.northeastern.cs5500.delivery.view.ViewModule;
 import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideAuthViewFactory;
 import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideDeliveryViewFactory;
-import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideOrderViewFactory;
 import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideRestaurantViewFactory;
-import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideShoppingCartViewFactory;
 import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideStatusViewFactory;
 import edu.northeastern.cs5500.delivery.view.ViewModule_ProvideUserViewFactory;
 import java.util.Set;
@@ -98,10 +92,6 @@ final class DaggerServerComponent implements ServerComponent {
 
   private Provider<RestaurantView> restaurantViewProvider;
 
-  private Provider<ShoppingCartView> shoppingCartViewProvider;
-
-  private Provider<OrderView> orderViewProvider;
-
   private DaggerServerComponent(ViewModule viewModuleParam,
       RepositoryModule repositoryModuleParam) {
     this.viewModule = viewModuleParam;
@@ -131,14 +121,8 @@ final class DaggerServerComponent implements ServerComponent {
   private View getProvideRestaurantView() {
     return ViewModule_ProvideRestaurantViewFactory.provideRestaurantView(viewModule, restaurantViewProvider.get());}
 
-  private View getProvideShoppingCartView() {
-    return ViewModule_ProvideShoppingCartViewFactory.provideShoppingCartView(viewModule, shoppingCartViewProvider.get());}
-
-  private View getProvideOrderView() {
-    return ViewModule_ProvideOrderViewFactory.provideOrderView(viewModule, orderViewProvider.get());}
-
   private Set<View> getSetOfView() {
-    return ImmutableSet.<View>of(getProvideDeliveryView(), getProvideStatusView(), getProvideUserView(), getProvideAuthView(), getProvideRestaurantView(), getProvideShoppingCartView(), getProvideOrderView());}
+    return ImmutableSet.<View>of(getProvideDeliveryView(), getProvideStatusView(), getProvideUserView(), getProvideAuthView(), getProvideRestaurantView());}
 
   @SuppressWarnings("unchecked")
   private void initialize(final ViewModule viewModuleParam,
@@ -159,8 +143,6 @@ final class DaggerServerComponent implements ServerComponent {
     this.driverControllerProvider = DoubleCheck.provider(DriverController_Factory.create(provideDriverRepositoryProvider, orderControllerProvider));
     this.restaurantControllerProvider = DoubleCheck.provider(RestaurantController_Factory.create(provideRestaurantRepositoryProvider, driverControllerProvider, orderControllerProvider));
     this.restaurantViewProvider = DoubleCheck.provider(RestaurantView_Factory.create(JsonTransformer_Factory.create(), restaurantControllerProvider));
-    this.shoppingCartViewProvider = DoubleCheck.provider(ShoppingCartView_Factory.create(JsonTransformer_Factory.create(), userControllerProvider));
-    this.orderViewProvider = DoubleCheck.provider(OrderView_Factory.create(JsonTransformer_Factory.create(), orderControllerProvider, userControllerProvider));
   }
 
   @Override
