@@ -62,8 +62,5 @@ public class RepositoryModule {
         return new MongoDBRepository<>(Restaurant.class, mongoDBService);
     }
 
-    @Provides
-    public GenericRepository<Driver> provideDriverRepository(MongoDBService mongoDBService) {
-        return new MongoDBRepository<>(Driver.class, mongoDBService);
-    }
+
 }
