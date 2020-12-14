@@ -18,14 +18,14 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             </div>
-                            <input type="text" id="email" class="form-control" name="email" placeholder="Email" value="abc@gmail.com" required autofocus>
+                            <input type="text" id="email" class="form-control" name="email" placeholder="Email" required autofocus>
 
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
-                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" value="123" required>
+                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
                         </div>
                         <div class="row">
                             <div class="progress waitLogo" style="width:25%;height:20px;margin:auto; margin-top: 10px; margin-bottom: 10px;" hidden>
@@ -73,6 +73,7 @@
             url: "/signin",
             data: {"email": email, "password": password},
             success: function (response) {
+                console.log(JSON.stringify(response))
                 $("#log").html("<strong>Welcome back! <a href=\"/\"> Go to Home Page</a> </strong>");
                 $("#email").val("");
                 $("#password").val("");

@@ -18,15 +18,15 @@ public class User implements Model {
     private String address;
     private Integer phoneNumber;
     private ArrayList<Order> orderHistory = new ArrayList<>();
-    private ArrayList<FoodItem> cart = new ArrayList<>();
+    private ArrayList<FoodItem> cart;
     private ArrayList<Payment> paymentMethods;
     private boolean loginStatus;
 
     // to sign up as a new user needs email, password, username
-    //    public User(String email, String password, String userName) {
-    //        this.email = email;
-    //        this.password = password;
-    //        this.userName = userName;
-    //    }
+//    public User(String email, String password, String userName) {
+//        this.email = email;
+//        this.password = password;
+//        this.userName = userName;
+//    }
 
 }
