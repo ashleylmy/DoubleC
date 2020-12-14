@@ -93,7 +93,7 @@
                     //data: {"username": username, "salt": salt, "verifier": verifier, "email": email},
                     data: {"username": username, "password": pw, "email": email},
                     success: function (response) {
-                        $("#log").html("<strong>Registration Successful!  <a href=\"/\"> Go to Home Page</a> </a> </strong>");
+                        $("#log").html("<strong>Registration Successful!  <a href=\"/signin\"> Go sign in!</a> </a> </strong>");
                         $("#username").val("");
                         $("#email").val("");
                         $("#password").val("");

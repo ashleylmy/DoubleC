@@ -23,7 +23,7 @@ public class Path {
         //		log in routes
         public static String GET_LOGIN_PAGE = "/signin";
         public static String DO_LOGIN = "/signin";
-        public static String LOGOUT = "/logout";
+        public static String LOGOUT = "/signout";
 
         //		routes for performing crud on user
         public static String GET_SIGN_UP = "/signup"; // uses get method
@@ -36,7 +36,7 @@ public class Path {
         //		routes for managing users / authentication
 
         public static String NEW_USER = "/user"; // uses post method
-        public static String UPDATE_PWD = "/s/user/:id"; // uses put method
+        public static String UPDATE_CART = "/cart";
 
         public static String ATTR_USER_ID = "userId";
         public static String ATTR_USER_NAME = "username";
@@ -60,6 +60,7 @@ public class Path {
         public static String LOGIN = "signin.hbs"; // sign in page
         public static String SIGN_UP = "signup.hbs"; // sign up page
         public static String ORDER_HISTORY = "orderHistroy.hbs"; // order history
+        public static String CHECKOUT="checkout.hbs";
     }
 
     public static class Reply {

@@ -1,70 +1,93 @@
 {{> partials/header.hbs}}
 
-
-
 <header class="jumbotron menu" style="background-image:url({{restaurant.image}}); background-size: cover;">
     <h1 class="display-4">{{restaurant.name}}</h1>
 </header>
 
 <div class="container">
-    <div class="row d-flex flex-wrap" id="menu_item">
-        {{#each restaurant.menu}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card" id="food_item">
-                    <img class="card-img-top embed-responsive-item" src="{{this.imageUrl}}" alt="Card image cap">
-                    <div class="card-body">
-                        <div class="card-title"><h5 class="float-left">{{this.name}}</h5>
-                            <p class="text-right">$ {{this.price}}</p></div>
+<div class="row d-flex flex-wrap" id="menu_item">
+    {{#each restaurant.menu}}
+        <div class="col-md-3 col-sm-6">
+            <div class="card" id={{this.id}} >
+                <img class="card-img-top embed-responsive-item" src="{{this.imageUrl}}" alt="Card image cap">
+                <div class="card-body">
+                    <div class="card-title food-details"><h5 class="float-left food-name">{{this.name}}</h5>
+                        <p class="text-right">$ <span class="food-price">{{this.price}}</span></p></div>
+                    <!--                        <a href="/add-to-cart/{{ this.id }}" class="btn btn-success pull-right" role="button">Add</a>-->
+                    <!--                        <div class="row d-flex col-qty justify-content-md-center btn btn-success btn-sm add-item">-->
+                    <!--                            Add to Cart-->
+                    {{#if username}}
                         <div class="row d-flex col-qty justify-content-md-center">
                             <a href="#" class="qty qty-minus"><i class="fas fa-minus-circle"></i></a>
                             <input type="numeric" value="0"/>
-                            <a href="#" class="qty qty-plus"><i class="fas fa-plus-circle"></i></a>
-                        </div>
-                    </div>
+                            <a href="#" class="qty qty-plus"><i class="fas fa-plus-circle"></i></a></div>
+                    {{/if}}
                 </div>
-
             </div>
-        {{/each}}
-
-    </div>
+        </div>
+    {{/each}}
 </div>
 
-<div class="container">
-    <div class="row d-flex flex-wrap" id="checkout_bar">
-</div>
-</div>
+<!-- if user logged in, show shopping cart button in nav bar-->
+{{#if username}}
+    <nav class="navbar navbar-expand-md navbar-light fixed-bottom" style="background-color: #e3f2fd;" id="checkout_bar">
 
-<!--js for quantity plus and minus button-->
+    </nav>
+{{/if}}
+
+
 <script type="text/javascript">
+    // js for quantity plus and minus button
+    var restaurant = document.getElementsByTagName("H1")[0].innerText;
+
     $('a.qty-minus').on('click', function (e) {
         e.preventDefault();
         var $this = $(this);
         var $input = $this.closest('div').find('input');
+        var name = $this.closest('.card').find('h5').text()
+        var price = $this.closest('.card').find('.food-price').text()
         var value = parseInt($input.val());
-
+        console.log(price);
         if (value > 1) {
             value = value - 1;
         } else {
             value = 0;
         }
-
         $input.val(value);
-
     });
     $('a.qty-plus').on('click', function (e) {
         e.preventDefault();
         var $this = $(this);
         var $input = $this.closest('div').find('input');
+        var name = $this.closest('.card').find('h5').text();
+        var price = $this.closest('.card').find('.food-price').text();
         var value = parseInt($input.val());
-
         if (value < 100) {
             value = value + 1;
         } else {
             value = 100;
         }
-
         $input.val(value);
+
+        //update cart in backend
+        $.ajax({
+            type: "post",
+            url: "/add",
+            data: {"name": name, "price": price, "quantity": value, "restaurant": restaurant},
+            success: function (response) {
+                //send cart html string back as response
+                $("#log").html("<strong>Welcome back! <a href=\"/\"> Go to Home Page</a> </strong>");
+            },
+            error: function (error) {
+                console.log("error called! " + JSON.stringify(error));
+                $("#log").html("<strong>Oops!Something went wrong, try again!</strong>\n\
+                    <br>");
+            }
+        });
     });
+
+
+
 </script>
 
 {{> partials/footer.hbs}}
