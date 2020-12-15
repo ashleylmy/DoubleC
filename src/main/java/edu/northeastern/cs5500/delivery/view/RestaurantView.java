@@ -34,8 +34,14 @@ public class RestaurantView implements View {
                 (request, response) -> {
                     HashMap<String, Object> model = new HashMap<>();
                     model.put("restaurants", restaurantController.getAllRestaurants());
-                    log.info("home page");
-                    log.info(model.toString());
+                    model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
+                    model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
+                    model.put("cart", request.session().attribute("cart"));
+                    request.session().attribute("restaurant", "");
+                    //                    log.info("home page");
+                    //
+                    // log.info(request.session().attribute(Path.Web.ATTR_USER_NAME));
+                    //                    log.info(model.toString());
                     return new ModelAndView(model, Path.Templates.INDEX) {};
                 },
                 new HandlebarsTemplateEngine());
@@ -53,60 +59,16 @@ public class RestaurantView implements View {
                 "/restaurants/:id",
                 (request, response) -> {
                     final String paramId = request.params(":id");
-                    log.info(paramId);
                     final ObjectId id = new ObjectId(paramId);
-                    log.info(id.toString());
                     Restaurant restaurant = restaurantController.getRestaurant(id);
+                    request.session().attribute("restaurant", restaurant.getName());
                     HashMap<String, Object> model = new HashMap<>();
                     model.put("restaurant", restaurant);
-                    log.info(restaurant.getMenu().toString());
+                    model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
+                    model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
+                    model.put("cart", request.session().attribute("cart"));
                     return new ModelAndView(model, Path.Templates.MENU) {};
                 },
                 new HandlebarsTemplateEngine());
-
-        // Not include CRUD for restaurants
-        //        // add new restaurant
-        //        // TODO not sure if this is necessary
-        //        post(
-        //                "/restaurants/addNew",
-        //                (request, response) -> {
-        //                    ObjectMapper mapper = new ObjectMapper();
-        //                    Restaurant restaurant = mapper.readValue(request.body(),
-        // Restaurant.class);
-        //
-        //                    // Ignore the user-provided ID if there is one
-        //                    restaurant.setId(null);
-        //                    restaurant = restaurantController.addRestaurant(restaurant);
-        //
-        //                    response.redirect(
-        //                            String.format("/restaurants/{}",
-        // restaurant.getId().toHexString()),
-        //                            301);
-        //                    return restaurant;
-        //                });
-        //
-        //        // restaurant can be modified, new name, new menu etc
-        //        // TODO check with TA about path, also the delete
-        //        put(
-        //                "/restaurants/:id",
-        //                (request, response) -> {
-        //                    ObjectMapper mapper = new ObjectMapper();
-        //                    Restaurant restaurant = mapper.readValue(request.body(),
-        // Restaurant.class);
-        //
-        //                    restaurantController.updateRestaurant(restaurant);
-        //                    return restaurant;
-        //                });
-        //
-        //        delete(
-        //                "/restuarants",
-        //                (request, response) -> {
-        //                    ObjectMapper mapper = new ObjectMapper();
-        //                    Restaurant restaurant = mapper.readValue(request.body(),
-        // Restaurant.class);
-        //
-        //                    restaurantController.deleteRestaurant(restaurant.getId());
-        //                    return restaurant;
-        //                });
     }
 }

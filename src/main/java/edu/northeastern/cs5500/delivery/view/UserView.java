@@ -7,6 +7,7 @@ import edu.northeastern.cs5500.delivery.App;
 import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.UserController;
 import edu.northeastern.cs5500.delivery.model.Order;
+import edu.northeastern.cs5500.delivery.model.Restaurant.Restaurant;
 import edu.northeastern.cs5500.delivery.model.user.User;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
 import spark.Session;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+
+import java.util.HashMap;
 
 @Singleton
 @Slf4j
@@ -43,49 +46,35 @@ public class UserView implements View {
 
         // make user is logged in
         // user can review restaurants without logging in
-        before(
-                "/user",
-                (req, res) -> {
-                    Session session = req.session(true);
-                    boolean auth =
-                            session.attribute(Path.Web.AUTH_STATUS) != null
-                                    ? session.attribute(Path.Web.AUTH_STATUS)
-                                    : false;
-                    logger.info("auth status = " + auth);
-                    if (!auth) {
-                        logger.warn("Login is REQUIRED");
-                        res.redirect(Path.Web.GET_LOGIN_PAGE);
-                        halt(401);
-                    }
-                });
+//        before(
+//                "/user",
+//                (req, res) -> {
+//                    Session session = req.session(true);
+//                    boolean auth =
+//                            session.attribute(Path.Web.AUTH_STATUS) != null
+//                                    ? session.attribute(Path.Web.AUTH_STATUS)
+//                                    : false;
+//                    logger.info("auth status = " + auth);
+//                    if (!auth) {
+//                        logger.warn("Login is REQUIRED");
+//                        res.redirect(Path.Web.GET_LOGIN_PAGE);
+//                        halt(401);
+//                    }
+//                });
 
-        // get specific user
-        // TODO current User?
+        // add new order, page will redirect to new order page
         get(
-                "/user/:id",
+                "/checkout",
                 (request, response) -> {
-                    final String paramId = request.params(":id");
-                    log.debug("/user/:id<{}>", paramId);
-                    final ObjectId id = new ObjectId(paramId);
-                    User user = userController.getUser(id);
-                    if (user == null) {
-                        halt(404);
-                    }
-                    response.type("application/json");
-                    return user;
+                    HashMap<String, Object> model = new HashMap<>();
+                    User user=userController.getUserByEmail(request.session().attribute(Path.Web.ATTR_EMAIL));
+                    Order order=userController.orderGen(user);
+                    model.put("total", order.getTotalCost());
+                    model.put("user", user);
+                    model.put("cart", request.session().attribute("cart"));
+                    return new ModelAndView(model, Path.Templates.CHECKOUT) {};
                 },
-                jsonTransformer);
-
-        // update user information
-        put(
-                Path.Web.UPDATE,
-                (request, response) -> {
-                    ObjectMapper mapper = new ObjectMapper();
-                    User user = mapper.readValue(request.body(), User.class);
-                    userController.updateUser(user);
-                    response.redirect("/user/:id", 301); // redirect to user page
-                    return user;
-                });
+                new HandlebarsTemplateEngine());
 
         // add new order, page will redirect to new order page
         post(
@@ -96,8 +85,7 @@ public class UserView implements View {
                     final ObjectId id = new ObjectId(paramId);
                     User user = userController.getUser(id);
                     double tip = Double.parseDouble(request.params("tip")); // add tip
-
-                    Order order = userController.orderGen(user, tip);
+                    Order order = userController.orderGen(user);
                     response.redirect(String.format("/order/{}", order.getId().toHexString()), 301);
                     return order;
                 });
