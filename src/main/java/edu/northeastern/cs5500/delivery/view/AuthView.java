@@ -5,8 +5,10 @@ import static spark.Spark.*;
 import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.UserController;
 import edu.northeastern.cs5500.delivery.model.user.User;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import lombok.extern.slf4j.Slf4j;
 import spark.ModelAndView;
 import spark.Session;
@@ -17,11 +19,14 @@ import spark.template.handlebars.*;
 public class AuthView implements View {
 
     @Inject
-    AuthView() {}
+    AuthView() {
+    }
 
-    @Inject JsonTransformer jsonTransformer;
+    @Inject
+    JsonTransformer jsonTransformer;
 
-    @Inject UserController userController;
+    @Inject
+    UserController userController;
 
     @Override
     public void register() {
@@ -31,7 +36,8 @@ public class AuthView implements View {
         get(
                 Path.Web.GET_SIGN_UP,
                 (req, res) -> {
-                    return new ModelAndView(null, Path.Templates.SIGN_UP) {};
+                    return new ModelAndView(null, Path.Templates.SIGN_UP) {
+                    };
                 },
                 new HandlebarsTemplateEngine());
 
@@ -67,22 +73,17 @@ public class AuthView implements View {
                 (request, response) -> {
                     String email = request.queryParams("email");
                     String password = request.queryParams("password");
-                    log.info(email + password);
                     if (email != null && !email.isEmpty()) {
                         // do something to check password
                         if (userController.validUser(email, password)) {
-                            log.info("login successful");
                             Session session = request.session(true);
                             User user = userController.getUserByEmail(email);
-                            log.info(user.toString());
                             session.attribute(Path.Web.ATTR_USER_NAME, user.getUserName());
                             session.attribute(
                                     Path.Web.ATTR_USER_ID,
                                     user.getId().toString()); // saves the id as String
                             session.attribute(Path.Web.ATTR_EMAIL, user.getEmail());
                             session.attribute("cart", user.getCart());
-                            log.info("cart" + session.attribute("cart"));
-                            log.info(session.attribute(Path.Web.ATTR_USER_NAME));
                             // response.redirect(Path.Web.HOME, 301);
                             return "login successful";
                         } else {

@@ -1,0 +1,48 @@
+{{> partials/header.hbs}}
+<hr>
+<div class="bg-light vsc-initialized container" id="checkout-page">
+    <div class="col">
+        <div class="row d-flex justify-content-between align-items-center text-center mb-3">
+            <h4>Order Confirmed</h4>
+        </div>
+        <div class="row">
+            <h5 class="d-flex justify-content-between align-items-start mb-3">
+                <span class="text-muted">Order Status : </span>
+            <strong> &nbsp{{order.status}}</strong></h5>
+        </div>
+        <hr>
+        <div class="card container">
+            <div class="text-left justify-content-left align-items-start pt-3 ml-3">
+                <h5>Order Details</h5>
+            </div>
+            <hr>
+            <div>
+                {{#each order.dishOrder}}
+                    <div class="row p-2 ml-3 justify-content-start align-items-center">
+                        <p class="text-left"> {{this.name}} ------
+                            <span>&nbsp$ {{this.price}}</span></p>
+                    </div>
+                {{/each}}
+            </div>
+            <hr class="m-2">
+            <div class="d-flex justify-content-center align-items-start p-2">
+                Total Amount Paid: $ {{order.totalCost}}
+            </div>
+        </div>
+        <hr class="m-2">
+        <div class="row d-flex justify-content-start align-items-start p-3" id="update_status">
+            <h5 class="m-3">Update order status</h5>
+            <select class="custom-select d-block " id="status" >
+                <option value="">Change status to ..</option>
+                <option> Ready for pick up</option>
+                <option> Picked up by Driver</option>
+                <option> Delivered by Driver</option>
+                <option> Cancelled</option>
+                <option> Completed</option>
+            </select>
+            <button class="btn btn-primary btn-sm m-2" type="submit">Update</button>
+        </div>
+    </div>
+</div>
+
+{{> partials/footer.hbs}}

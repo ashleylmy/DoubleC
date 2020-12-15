@@ -4,6 +4,8 @@ import edu.northeastern.cs5500.delivery.model.*;
 import edu.northeastern.cs5500.delivery.model.user.Payment;
 import edu.northeastern.cs5500.delivery.model.user.User;
 import edu.northeastern.cs5500.delivery.repository.GenericRepository;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -11,6 +13,7 @@ import javax.inject.Singleton;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import java.text.DecimalFormat;
 
 @Singleton
 @Slf4j
@@ -70,6 +73,15 @@ public class UserController {
         return users.get(uuid);
     }
 
+    public ArrayList<Order> getAllOrders(User user){
+        ArrayList<Order> orders=new ArrayList<>();
+        for(ObjectId id:user.getOrderHistory()){
+            Order order=orderController.getOrder(id);
+            orders.add(order);
+        }
+        return orders;
+    }
+
     // -----------------------------------modify shopping cart----------------------//
     // if the added new food belongs to different restaurant, shopping cart must be cleared before
     // adding
@@ -106,17 +118,25 @@ public class UserController {
         user.getCart().clear();
     }
 
-    // -------------------------checkout shopping cart------------------------//
-    public void addNewPayment(User user, Payment newPayment) {
-        user.getPaymentMethods().add(newPayment);
+    // calculate the subtotal of an order.
+    public Double totalCostOfCart(User user) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        ArrayList<FoodItem> foodItems= user.getCart();
+        Double subtotal = 0.0;
+        for (FoodItem item : foodItems) {
+            subtotal += item.getPrice();
+        }
+        return Double.valueOf(df.format(subtotal));
     }
 
-
+    // -------------------------checkout shopping cart------------------------//
 
     // add selected food to new order and set delivery address, payment info.
     public Order orderGen(User user) throws Exception {
         // add shopping cart to order
-        Order newOrder = orderController.generateOrder(user.getCart());
+        Order newOrder = new Order();
+        newOrder.setTotalCost(totalCostOfCart(user));
+        newOrder.setDishOrder(user.getCart());
         newOrder.setUser(user);
         // adding tip to total cost
         // adding Payment method
@@ -126,19 +146,23 @@ public class UserController {
         // setOrderStatus to ordered
         newOrder.setStatus(OrderStatus.ORDERED);
         // notify restaurant about new order
-        orderController.addOrder(newOrder);
-        orderController.notifyRestaurant(newOrder);
-        return newOrder;
+        Order finalOrder=orderController.addOrder(newOrder);
+        user.getOrderHistory().add(finalOrder.getId());
+        orderController.notifyRestaurant(finalOrder);
+        log.info(user.toString());
+        discardCurCart(user);
+        users.update(user);
+        return finalOrder;
     }
 
     // check if valid payment is provided. If not, add new payment. Else return default(0) Payment
-    private Payment checkPayment(User user) {
+    private Payment checkPayment(User user) throws Exception{
         log.debug("UserController > check User has valid Payment...");
-        if (user.getPaymentMethods().isEmpty()) {
+        if (user.getPaymentMethod()==null) {
             System.out.println("Add new payment type");
-            return new Payment();
+            throw new Exception("need Payment");
         }
-        return user.getPaymentMethods().get(0);
+        return user.getPaymentMethod();
     }
 
     // check valid address

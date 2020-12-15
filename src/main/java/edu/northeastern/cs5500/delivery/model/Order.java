@@ -16,11 +16,7 @@ public class Order implements Model {
     private Double totalCost;
     private String deliveryAddress;
     private Payment paymentMethod;
-    private Restaurant restaurant;
+    private String restaurant;
     private int rating;
 
-    public Order(ArrayList<FoodItem> dishOrder, Double totalCost) {
-        this.dishOrder = dishOrder;
-        this.totalCost = totalCost;
-    }
 }

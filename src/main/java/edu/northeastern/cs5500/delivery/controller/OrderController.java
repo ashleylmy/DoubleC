@@ -20,22 +20,6 @@ public class OrderController {
     @Inject
     OrderController(GenericRepository<Order> orders) {
         this.orders = orders;
-        //        log.debug("OrderController->constructor");
-        //        if (orders.count() > 0) {
-        //            return;
-        //        }
-        //        log.info("OrderController > construct > adding default order");
-        //
-        //        final Order order1 = new Order();
-        //        final Order order2 = new Order();
-        //
-        //        try {
-        //            addOrder(order1);
-        //            addOrder(order2);
-        //        } catch (Exception e) {
-        //            log.error("OrderController > construct > adding default orders > failure?");
-        //            e.printStackTrace();
-        //        }
     }
     // adding a new order to the orders database
     @Nonnull
@@ -54,21 +38,8 @@ public class OrderController {
         return orders.get(id);
     }
 
-    // generate a partial order with food items and cost. User need to finish adding tip, address
-    // and payment
-    public Order generateOrder(ArrayList<FoodItem> foodItems) {
-        Double subtotal = calculateSubtotal(foodItems);
-        return new Order(foodItems, subtotal);
-    }
 
-    // calculate the subtotal of an order.
-    public Double calculateSubtotal(ArrayList<FoodItem> foodItems) {
-        Double subtotal = 0.0;
-        for (FoodItem item : foodItems) {
-            subtotal += item.getPrice();
-        }
-        return subtotal;
-    }
+
 
     // both user and restaurant can cancel order. But user can only cancel unprepared order.
     public void cancelOrder(Order order) {
@@ -92,8 +63,6 @@ public class OrderController {
     public void oderDelivered(Order order) {
         System.out.println("Your order is delivered! ");
         order.setStatus(OrderStatus.DELIVERED);
-        order.getRestaurant().getOrderHistory().add(order);
-        order.getUser().getOrderHistory().add(order);
     }
 
     // trigger once order status changed by user, either created or cancelled

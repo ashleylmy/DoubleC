@@ -59,7 +59,7 @@ public class Path {
         public static String DASHBOARD = "main.hbs";
         public static String LOGIN = "signin.hbs"; // sign in page
         public static String SIGN_UP = "signup.hbs"; // sign up page
-        public static String ORDER_HISTORY = "orderHistroy.hbs"; // order history
+        public static String ORDER_HISTORY = "orderHistory.hbs"; // order history
         public static String CHECKOUT="checkout.hbs";
     }
 

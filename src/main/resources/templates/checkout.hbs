@@ -1,74 +1,10 @@
 {{> partials/header.hbs}}
-
-<div class="row">
-    <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-        <h1>Checkout</h1>
-        <h4>You total bill: {{ total }} PLN</h4>
-        <div id="charge-error" class="alert alert-danger {{#if noError}}hidden{{/if}}">
-            {{errMsg}}
-        </div>
-        <form action="/checkout" method="post" id="checkout-form">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" class="form-control" required name="name">
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="adress">Adress</label>
-                        <input type="text" id="adress" class="form-control" required name="adress">
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="card-name">Card Holder Name</label>
-                        <input type="text" id="card-name" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="card-number">Credit Card Number</label>
-                        <input type="text" id="card-number" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="form-group">
-                                <label for="card-expiry-month">Expiration Month</label>
-                                <input type="text" id="card-expiry-month" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="form-group">
-                                <label for="card-expiry-year">Expiration Year</label>
-                                <input type="text" id="card-expiry-year" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label for="card-cvc">CVC</label>
-                        <input type="text" id="card-cvc" class="form-control" required>
-                    </div>
-                </div>
-
-            </div>
-            <button type="submit" class="btn btn-success">Confirm Payment</button>
-        </form>
-    </div>
-</div>
-
-<div class="bg-light vsc-initialized container">
+<hr>
+<div class="bg-light vsc-initialized container" id="checkout-page">
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4" id="checkout-cart">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">Your cart</span>
-                <span class="badge badge-secondary badge-pill">3</span>
             </h4>
             <ul class="list-group mb-3">
                 {{#each cart}}
@@ -80,39 +16,39 @@
                     </li>
                 {{/each}}
             </ul>
+            <h4>Total cost: $ {{ total }} </h4>
         </div>
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Check Out</h4>
-            <form class="needs-validation" novalidate="" id="checkout-form">
+            <form action="/checkout" method="post" id="checkout-form">
                 <div class="mb-3">
                     <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
+                    <input type="text" class="form-control" id="address" value="225 Terry Ave N" required="">
                     <div class="invalid-feedback">
-                        Please enter your shipping address.
+                        Please enter your address.
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-5 mb-3">
-                        <label for="state">State</label>
-                        <select class="custom-select d-block w-100" id="state" required="">
-                            <option value="">Choose...</option>
-                            <option>California</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please provide a valid state.
-                        </div>
-                    </div>
                     <div class="col-md-4 mb-3">
                         <label for="state">City</label>
-                        <input type="text" class="form-control" id="city" placeholder="" required="">
+                        <input type="text" class="form-control" id="city" value="Seattle" required="">
                         <div class="invalid-feedback">
                             Please provide a valid city.
                         </div>
                     </div>
+                    <div class="col-md-5 mb-3">
+                        <label for="state">State</label>
+
+                            <input type="text" class="form-control" id="state" value="WA" required="">
+                        <div class="invalid-feedback">
+                            Please provide a valid state.
+                        </div>
+                    </div>
+
                     <div class="col-md-3 mb-3">
                         <label for="zip">Zip</label>
-                        <input type="text" class="form-control" id="zip" placeholder="" required="">
+                        <input type="text" class="form-control" id="zip" value="98109" required="">
                         <div class="invalid-feedback">
                             Zip code required.
                         </div>
@@ -139,34 +75,18 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="cc-name">Name on card</label>
-                        <input type="text" class="form-control" id="cc-name" placeholder="" required="">
+                        <label for="card-name">Name on card</label>
+                        <input type="text" class="form-control" id="card-name" value="abc" required="">
                         <small class="text-muted">Full name as displayed on card</small>
                         <div class="invalid-feedback">
                             Name on card is required
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="cc-number">Credit card number</label>
-                        <input type="text" class="form-control" id="cc-number" placeholder="" required="">
+                        <label for="card-number">Credit card number</label>
+                        <input type="text" class="form-control" id="card-number" value="123456789" required="">
                         <div class="invalid-feedback">
                             Credit card number is required
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <label for="cc-expiration">Expiration</label>
-                        <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
-                        <div class="invalid-feedback">
-                            Expiration date required
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="cc-expiration">CVV</label>
-                        <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
-                        <div class="invalid-feedback">
-                            Security code required
                         </div>
                     </div>
                 </div>
@@ -176,8 +96,7 @@
         </div>
     </div>
 </div>
-<!-- Payment support -->
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 <script type="text/javascript" src="js/checkout.js"></script>
 
 {{> partials/footer.hbs}}

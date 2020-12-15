@@ -1,38 +1,27 @@
-Stripe.setPublishableKey('pk_test_Cm5d4vHnR2vOCkkw5h72TrGn');
+$(document).ready(function () {
 
-var $form = $('#checkout-form');
+    $("#checkout-form").on("submit", function (event) {
 
-$form.submit(function(event) {
+        event.preventDefault();
 
-    $('#charge-error').addClass('hidden');
-    $form.find('button').prop('disabled', true);
-    Stripe.card.createToken({
-        number: $('#card-number').val(),
-        cvc: $('#card-cvc').val(),
-        exp_month: $('#card-expiry-month').val(),
-        exp_year: $('#card-expiry-year').val(),
-        name: $('#card-name').val()
-    }, stripeResponseHandler);
-    return false;
-});
+        var cardNumber = $('#card-number').val(),
+            cardHolderName = $('#card-name').val(),
+            address = $('#address').val()+", "+ $('#city').val()+","+ $('#state').val()+" "+ $('#zip').val();
 
-function stripeResponseHandler(status, response) {
-    if (response.error) { // Problem!
-        // Show the errors on the form
-        $('#charge-error').text(response.error.message);
-        $('#charge-error').removeClass('hidden');
-        $form.find('button').prop('disabled', false); // Re-enable submission
 
-    } else { // Token was created!
-
-        // Get the token ID:
-        var token = response.id;
-
-        // Insert the token into the form so it gets submitted to the server:
-        $form.append($('<input type="hidden" name="stripeToken" />').val(token));
-
-        // Submit the form:
-        $form.get(0).submit();
-
-    }
-}
+        $.ajax({
+            type: "POST",
+            url: "/checkout",
+            data: {"cardNumber": cardNumber, "cardHolderName": cardHolderName, "address": address},
+            dataType: 'json',
+            success: function (response) {
+                // createdorder=response
+                // console.log(response);
+                window.location.href = "/order/"+response.id;
+            },
+            error: function (error) {
+                console.log("error called! " + JSON.stringify(error));
+            }
+        });
+    })
+})

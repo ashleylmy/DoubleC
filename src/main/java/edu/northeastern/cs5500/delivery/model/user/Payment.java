@@ -7,4 +7,5 @@ import lombok.Data;
 public class Payment {
     private String cardNumber;
     private String cardHolderName;
+
 }

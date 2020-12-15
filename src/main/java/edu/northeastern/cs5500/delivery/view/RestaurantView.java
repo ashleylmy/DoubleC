@@ -33,15 +33,12 @@ public class RestaurantView implements View {
                 Path.Web.HOME,
                 (request, response) -> {
                     HashMap<String, Object> model = new HashMap<>();
+                    model.put("userId", request.session().attribute(Path.Web.ATTR_USER_ID));
                     model.put("restaurants", restaurantController.getAllRestaurants());
                     model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
                     model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
                     model.put("cart", request.session().attribute("cart"));
                     request.session().attribute("restaurant", "");
-                    //                    log.info("home page");
-                    //
-                    // log.info(request.session().attribute(Path.Web.ATTR_USER_NAME));
-                    //                    log.info(model.toString());
                     return new ModelAndView(model, Path.Templates.INDEX) {};
                 },
                 new HandlebarsTemplateEngine());
@@ -64,6 +61,7 @@ public class RestaurantView implements View {
                     request.session().attribute("restaurant", restaurant.getName());
                     HashMap<String, Object> model = new HashMap<>();
                     model.put("restaurant", restaurant);
+                    model.put("userId", request.session().attribute(Path.Web.ATTR_USER_ID));
                     model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
                     model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
                     model.put("cart", request.session().attribute("cart"));
