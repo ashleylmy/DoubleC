@@ -14,6 +14,8 @@ import org.bson.types.ObjectId;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.HashMap;
+
 @Singleton
 @Slf4j
 public class OrderView implements View {
@@ -36,13 +38,19 @@ public class OrderView implements View {
                 "/order/:id",
                 (request, response) -> {
                     final String paramId = request.params(":id");
-                    log.debug("/order/:id<{}>", paramId);
                     ObjectId id = new ObjectId(paramId);
                     Order order = orderController.getOrderById(id);
                     if (order == null) {
                         halt(404, "Not existing");
                     }
-                    return new ModelAndView(null, Path.Templates.ORDER_DETAIL) {};
+                    HashMap<String, Object> model = new HashMap<>();
+                    model.put("userId", request.session().attribute(Path.Web.ATTR_USER_ID));
+                    model.put("order", order);
+                    model.put("cart", request.session().attribute("cart"));
+                    model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
+                    model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
+                    model.put("id", paramId);
+                    return new ModelAndView(model, Path.Templates.ORDER_DETAIL) {};
                 },
                 new HandlebarsTemplateEngine());
 
@@ -56,7 +64,6 @@ public class OrderView implements View {
                         response.status(400);
                         return "";
                     }
-
                     orderController.cancelOrder(order);
                     return order;
                 });

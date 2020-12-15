@@ -54,8 +54,6 @@ public class ShoppingCartView implements View {
                     User currentUser = userController.getUserByEmail(session.attribute(Path.Web.ATTR_EMAIL));
                     userController.addItemToCart(currentUser, newItem);
                     session.attribute("cart", currentUser.getCart());
-                    log.info("cart" + session.attribute("cart"));
-                    log.info("adding successful");
                     //res.redirect("/restaurants/:id", 301);
                     return "adding successful";
                 });

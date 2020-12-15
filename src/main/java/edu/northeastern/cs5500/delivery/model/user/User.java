@@ -17,9 +17,9 @@ public class User implements Model {
     private String userName;
     private String address;
     private Integer phoneNumber;
-    private ArrayList<Order> orderHistory = new ArrayList<>();
+    private ArrayList<ObjectId> orderHistory = new ArrayList<>();
     private ArrayList<FoodItem> cart = new ArrayList<>();
-    private ArrayList<Payment> paymentMethods;
+    private Payment paymentMethod;
     private boolean loginStatus;
 
     // to sign up as a new user needs email, password, username
