@@ -89,8 +89,6 @@ public class UserController {
     // TODO check if user param can be used directly or needed to find user by getUser(uuid)
 
     private boolean validAdding(User user, FoodItem item) {
-        log.info("validing item"+user.toString());
-        log.info(item.toString());
         if (user.getCart().isEmpty()) return true;
         String curSavedRestaurant = user.getCart().get(0).getRestaurant();
         return curSavedRestaurant.equals(item.getRestaurant());
@@ -100,7 +98,12 @@ public class UserController {
     public void addItemToCart(User user, FoodItem item) {
         log.debug("UserController > adding item to shopping cart...");
         if (validAdding(user, item)) {
+            FoodItem existItem=findItemInCart(user, item);
+            if(existItem!=null) {
+                existItem.setQuantity(item.getQuantity());
+            }else{
             user.getCart().add(item);
+            }
             users.update(user);
         } else {
             // pop up window ask user to choose if clear cart and then add item
@@ -108,9 +111,28 @@ public class UserController {
             addItemToCart(user, item);
         }
     }
+
+    public FoodItem findItemInCart(User user, FoodItem item){
+        ArrayList<FoodItem> currCart=user.getCart();
+        for(FoodItem existItem:currCart){
+            if(existItem.getName().equals(item.getName())){
+                return existItem;
+            }
+        }
+        return null;
+    }
     // delete item
     public void deleteItemFromCart(User user, FoodItem item) {
-        user.getCart().remove(item);
+        FoodItem existItem= findItemInCart(user, item);
+        if(existItem!=null) {
+            if(item.getQuantity()>0){
+                existItem.setQuantity(item.getQuantity());
+            }else{
+                user.getCart().remove(existItem);
+            }
+            users.update(user);
+        }
+
     }
 
     // clear cart
@@ -124,7 +146,7 @@ public class UserController {
         ArrayList<FoodItem> foodItems= user.getCart();
         Double subtotal = 0.0;
         for (FoodItem item : foodItems) {
-            subtotal += item.getPrice();
+            subtotal += item.getPrice()*item.getQuantity();
         }
         return Double.valueOf(df.format(subtotal));
     }
@@ -132,7 +154,7 @@ public class UserController {
     // -------------------------checkout shopping cart------------------------//
 
     // add selected food to new order and set delivery address, payment info.
-    public Order orderGen(User user) throws Exception {
+    public Order orderGen(User user, String restaurant) throws Exception {
         // add shopping cart to order
         Order newOrder = new Order();
         newOrder.setTotalCost(totalCostOfCart(user));
@@ -146,10 +168,10 @@ public class UserController {
         // setOrderStatus to ordered
         newOrder.setStatus(OrderStatus.ORDERED);
         // notify restaurant about new order
+        newOrder.setRestaurant(restaurant);
         Order finalOrder=orderController.addOrder(newOrder);
         user.getOrderHistory().add(finalOrder.getId());
         orderController.notifyRestaurant(finalOrder);
-        log.info(user.toString());
         discardCurCart(user);
         users.update(user);
         return finalOrder;

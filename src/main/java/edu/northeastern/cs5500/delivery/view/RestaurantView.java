@@ -39,6 +39,7 @@ public class RestaurantView implements View {
                     model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
                     model.put("cart", request.session().attribute("cart"));
                     request.session().attribute("restaurant", "");
+                    log.info("home page >"+request.session().attributes().toString());
                     return new ModelAndView(model, Path.Templates.INDEX) {};
                 },
                 new HandlebarsTemplateEngine());
@@ -65,6 +66,7 @@ public class RestaurantView implements View {
                     model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
                     model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
                     model.put("cart", request.session().attribute("cart"));
+                    log.info("restuarant page" + request.session().attribute("restaurant"));
                     return new ModelAndView(model, Path.Templates.MENU) {};
                 },
                 new HandlebarsTemplateEngine());

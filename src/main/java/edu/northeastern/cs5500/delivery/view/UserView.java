@@ -26,11 +26,6 @@ import java.util.HashMap;
 @Singleton
 @Slf4j
 public class UserView implements View {
-    //    POST /signup - POST request to add an user.
-    //    GET /user/:id - GET request to get user by :id.
-    //    GET /user - GET request to get all the users.
-    //    PUT /user/:id - UPDATE request to update an user by :id.
-    //    DELETE /user/:id - DELETE request to delete an user by :id.
 
     @Inject
     UserView() {
@@ -41,6 +36,7 @@ public class UserView implements View {
 
     @Inject
     UserController userController;
+
 
     @Override
     public void register() {
@@ -78,6 +74,7 @@ public class UserView implements View {
                     model.put("userId", request.session().attribute(Path.Web.ATTR_USER_ID));
                     model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
                     model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
+                    log.info("checkout page"+ request.session().attribute("restaurant"));
                     return new ModelAndView(model, Path.Templates.CHECKOUT) {
                     };
                 },
@@ -86,7 +83,7 @@ public class UserView implements View {
 
         // add new order, page will redirect to new order page
         post("/checkout", ((request, response) -> {
-            log.info("Post a checkout");
+            log.info("Post a checkout"+ request.session().attribute("restaurant"));
             User user = userController.getUserByEmail(request.session().attribute(Path.Web.ATTR_EMAIL));
             log.info(user.toString());
             String address = request.queryParams("address");
@@ -99,8 +96,9 @@ public class UserView implements View {
             user.setPaymentMethod(payment);
             user.setAddress(address);
             response.type("application/json");
-            Order order = userController.orderGen(user);
-            order.setRestaurant(request.session().attribute("restaurant"));
+            Order order = userController.orderGen(user, request.session().attribute("restaurant"));
+            log.info(order.toString());
+            request.session().attribute("restaurant", "");
             return order;
         }), jsonTransformer);
 
