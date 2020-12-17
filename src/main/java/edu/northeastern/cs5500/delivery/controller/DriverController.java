@@ -72,7 +72,7 @@ public class DriverController {
 
     // Deliver order to User
     public void orderDelivered(Order order) {
-        orderController.oderDelivered(order);
+        orderController.orderDelivered(order);
         //        Runnable newRunnable = new Runnable() {
         //            @Override
         //            public void run() {

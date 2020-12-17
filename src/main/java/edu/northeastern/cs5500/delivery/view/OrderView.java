@@ -7,8 +7,10 @@ import edu.northeastern.cs5500.delivery.JsonTransformer;
 import edu.northeastern.cs5500.delivery.controller.OrderController;
 import edu.northeastern.cs5500.delivery.controller.UserController;
 import edu.northeastern.cs5500.delivery.model.Order;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import spark.ModelAndView;
@@ -21,12 +23,16 @@ import java.util.HashMap;
 public class OrderView implements View {
 
     @Inject
-    OrderView() {}
+    OrderView() {
+    }
 
-    @Inject JsonTransformer jsonTransformer;
+    @Inject
+    JsonTransformer jsonTransformer;
 
-    @Inject OrderController orderController;
-    @Inject UserController userController;
+    @Inject
+    OrderController orderController;
+    @Inject
+    UserController userController;
 
     @Override
     public void register() {
@@ -50,53 +56,72 @@ public class OrderView implements View {
                     model.put("username", request.session().attribute(Path.Web.ATTR_USER_NAME));
                     model.put("email", request.session().attribute(Path.Web.ATTR_EMAIL));
                     model.put("id", paramId);
-                    return new ModelAndView(model, Path.Templates.ORDER_DETAIL) {};
+                    return new ModelAndView(model, Path.Templates.ORDER_DETAIL) {
+                    };
                 },
                 new HandlebarsTemplateEngine());
 
         // put order status (different order status: prepared, delivered)
-        put(
-                "/order/cancel",
+        post(
+                "/order/:id/cancel",
                 (request, response) -> {
-                    ObjectMapper mapper = new ObjectMapper();
-                    Order order = mapper.readValue(request.body(), Order.class);
+                    response.type("application/json");
+                    final String paramId = request.params(":id");
+                    ObjectId id = new ObjectId(paramId);
+                    Order order = orderController.getOrderById(id);
+                    orderController.cancelOrder(order);
                     if (order.getId() == null) {
                         response.status(400);
                         return "";
                     }
-                    orderController.cancelOrder(order);
                     return order;
-                });
+                }, jsonTransformer);
 
         // put("picked")
         //
-        put(
-                "/order/picked",
+        post(
+                "/order/:id/picked",
                 (request, response) -> {
-                    ObjectMapper mapper = new ObjectMapper();
-                    Order order = mapper.readValue(request.body(), Order.class);
-                    if (order.getId() == null) {
-                        response.status(400);
-                        return "";
-                    }
-
+                    response.type("application/json");
+                    final String paramId = request.params(":id");
+                    ObjectId id = new ObjectId(paramId);
+                    Order order = orderController.getOrderById(id);
                     orderController.orderPicked(order);
                     return order;
-                });
+                }, jsonTransformer);
 
         // put("delivered")
-        put(
-                "/order/delivered",
+        post(
+                "/order/:id/delivered",
                 (request, response) -> {
-                    ObjectMapper mapper = new ObjectMapper();
-                    Order order = mapper.readValue(request.body(), Order.class);
-                    if (order.getId() == null) {
-                        response.status(400);
-                        return "";
-                    }
-
-                    orderController.oderDelivered(order);
+                    response.type("application/json");
+                    final String paramId = request.params(":id");
+                    ObjectId id = new ObjectId(paramId);
+                    Order order = orderController.getOrderById(id);
+                    orderController.orderDelivered(order);
                     return order;
-                });
+                }, jsonTransformer);
+
+        post(
+                "/order/:id/pickup",
+                (request, response) -> {
+                    response.type("application/json");
+                    final String paramId = request.params(":id");
+                    ObjectId id = new ObjectId(paramId);
+                    Order order = orderController.getOrderById(id);
+                    orderController.orderReady(order);
+                    return order;
+                }, jsonTransformer);
+
+        post(
+                "/order/:id/completed",
+                (request, response) -> {
+                    response.type("application/json");
+                    final String paramId = request.params(":id");
+                    ObjectId id = new ObjectId(paramId);
+                    Order order = orderController.getOrderById(id);
+                    orderController.orderCompleted(order);
+                    return order;
+                }, jsonTransformer);
     }
 }

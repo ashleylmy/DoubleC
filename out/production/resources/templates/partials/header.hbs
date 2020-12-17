@@ -73,9 +73,9 @@
                 <!-- listing items starts -->
                 {{#if cart}}
                     <div>
-                        <ul class="list">
+                        <ul class="cart-list">
                             {{#each cart}}
-                                <li>{{this.name}} <span class="price">{{this.price}}</span></li>
+                                <li>{{this.name}} &nbsp <span class="price">&nbsp$&nbsp{{this.price}}</span><span>&times&nbsp&nbsp{{this.quantity}}</span></li>
                             {{/each}}
                         </ul>
 

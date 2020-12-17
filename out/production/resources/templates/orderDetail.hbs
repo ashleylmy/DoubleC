@@ -5,10 +5,13 @@
         <div class="row d-flex justify-content-between align-items-center text-center mb-3">
             <h4>Order Confirmed</h4>
         </div>
+        <div hidden id="order_id">
+            <h5>{{order.id}}</h5>
+        </div>
         <div class="row">
             <h5 class="d-flex justify-content-between align-items-start mb-3">
                 <span class="text-muted">Order Status : </span>
-            <strong> &nbsp{{order.status}}</strong></h5>
+            <strong id="orderStatus"> &nbsp{{order.status}}</strong></h5>
         </div>
         <hr>
         <div class="card container">
@@ -34,15 +37,39 @@
             <h5 class="m-3">Update order status</h5>
             <select class="custom-select d-block " id="status" >
                 <option value="">Change status to ..</option>
-                <option> Ready for pick up</option>
-                <option> Picked up by Driver</option>
-                <option> Delivered by Driver</option>
-                <option> Cancelled</option>
-                <option> Completed</option>
+                <option value="pickup"> Ready for pick up</option>
+                <option value="picked"> Picked up by Driver</option>
+                <option value="delivered"> Delivered by Driver</option>
+                <option value="cancel"> Cancelled</option>
+                <option value="completed"> Completed</option>
             </select>
-            <button class="btn btn-primary btn-sm m-2" type="submit">Update</button>
         </div>
     </div>
 </div>
 
+<script type="text/javascript">
+    let id=document.getElementById('order_id').innerText;
+
+    $(document).ready(function(){
+        $('#status').change(function(){
+            alert( "Handler for .change() called." );
+            status = $(this).val();
+            sentTo=$(location).attr('href')+'/'+status;
+            $.ajax
+            ({
+                url: sentTo,
+                data: {"status": status},
+                type: 'post',
+                success: function (response) {
+                    //send cart html string back as response
+                    $("#orderStatus").val(response.status);
+                    $("#orderStatus").load(location.href + " #orderStatus");
+                },
+                error: function (error) {
+                    console.log("error called! " + JSON.stringify(error));
+                }
+            });
+        });
+    });
+</script>
 {{> partials/footer.hbs}}

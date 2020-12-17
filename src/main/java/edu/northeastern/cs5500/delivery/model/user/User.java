@@ -22,11 +22,5 @@ public class User implements Model {
     private Payment paymentMethod;
     private boolean loginStatus;
 
-    // to sign up as a new user needs email, password, username
-    //    public User(String email, String password, String userName) {
-    //        this.email = email;
-    //        this.password = password;
-    //        this.userName = userName;
-    //    }
 
 }

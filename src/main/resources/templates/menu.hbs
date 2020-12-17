@@ -38,7 +38,8 @@
 
 <script type="text/javascript">
     // js for quantity plus and minus button
-    var restaurant = document.getElementsByTagName("H1")[0].innerText;
+    let restaurant = document.getElementsByTagName("H1")[0].innerText;
+    const list = document.querySelector('.cart-list');
 
     $('a.qty-minus').on('click', function (e) {
         e.preventDefault();
@@ -54,6 +55,21 @@
             value = 0;
         }
         $input.val(value);
+
+        $.ajax({
+            type: "put",
+            url: "/subtract",
+            data: {"name": name, "price": price, "quantity": value, "restaurant": restaurant},
+            success: function (response) {
+                //send cart html string back as response
+                console.log(response);
+                updateCart(response);
+                $(".modal-body").load(location.href + " .modal-body");
+            },
+            error: function (error) {
+                console.log("error called! " + JSON.stringify(error));
+            }
+        });
     });
     $('a.qty-plus').on('click', function (e) {
         e.preventDefault();
@@ -76,16 +92,26 @@
             data: {"name": name, "price": price, "quantity": value, "restaurant": restaurant},
             success: function (response) {
                 //send cart html string back as response
-                $("#log").html("<strong>Welcome back! <a href=\"/\"> Go to Home Page</a> </strong>");
+                console.log(response);
+                updateCart(response);
+                $(".modal-body").load(location.href + " .modal-body");
             },
             error: function (error) {
                 console.log("error called! " + JSON.stringify(error));
-                $("#log").html("<strong>Oops!Something went wrong, try again!</strong>\n\
-                    <br>");
             }
         });
     });
 
+    function updateCart(cart) {
+        list.innerHTML = "";
+        for (let i = 0; i < cart.length; i++) {
+            let text = cart[i].name + " " +"<span>  "+cart[i].price+"</span>" +"<span> "+cart[i].quantity+"</span>" ;
+            let listItem = document.createElement("LI");
+            listItem.innerHTML = text;
+            list.appendChild(listItem);
+            listItem.style.textAlign = 'left';
+        }
+    }
 
 
 </script>

@@ -38,32 +38,41 @@ public class OrderController {
         return orders.get(id);
     }
 
+    // update order in database
+    public Order updateOrder(Order order) {
+        return orders.update(order);
+    }
 
-
-
+    public Order orderReady(Order order) {
+        order.setStatus(OrderStatus.READYFORPICKUP);
+        return orders.update(order);
+    }
     // both user and restaurant can cancel order. But user can only cancel unprepared order.
-    public void cancelOrder(Order order) {
-        if (order.getStatus().equals(OrderStatus.ORDERED)) {
+    public Order cancelOrder(Order order) {
             System.out.println("This order is cancelled! ");
             order.setStatus(OrderStatus.CANCELLED);
-        } else {
-            System.out.println("The oder has been prepared, can't cancel!");
-        }
+            return orders.update(order);
     }
 
     // driver will call this function once pick up the order to set order status to be PICKED
-    public void orderPicked(Order order) {
-        System.out.println("Your order is picked up! ");
+    public Order orderPicked(Order order) {
         order.setStatus(OrderStatus.PICKED);
-        System.out.println("Driver is delivering your order");
+        return orders.update(order);
     }
 
     // driver will call this function once order is delivered.
     // add current order to restaurant's and user's order history
-    public void oderDelivered(Order order) {
-        System.out.println("Your order is delivered! ");
+    public Order orderDelivered(Order order) {
         order.setStatus(OrderStatus.DELIVERED);
+        return orders.update(order);
     }
+
+    //order completed
+    public Order orderCompleted(Order order) {
+        order.setStatus(OrderStatus.COMPLETED);
+        return orders.update(order);
+    }
+
 
     // trigger once order status changed by user, either created or cancelled
     public void notifyRestaurant(Order order) {
@@ -79,4 +88,6 @@ public class OrderController {
     public Order getOrder(ObjectId id) {
         return orders.get(id);
     }
+
+
 }

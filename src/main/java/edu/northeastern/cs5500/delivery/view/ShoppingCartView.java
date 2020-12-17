@@ -37,25 +37,46 @@ public class ShoppingCartView implements View {
         post(
                 "/add",
                 (req, res) -> {
+                    res.type("application/json");
                     log.info("adding new item");
                    // FoodItem newItem = mapper.readValue(req.body(), FoodItem.class);
                     // String id=req.queryParams("")
                     String name = req.queryParams("name");
                     String price = req.queryParams("price");
                     String restaurant=req.queryParams("restaurant");
-                    log.info(name+price+restaurant);
+                    String quantity=req.queryParams("quantity");
+                    Session session = req.session();
+                    User currentUser = userController.getUserByEmail(session.attribute(Path.Web.ATTR_EMAIL));
                     FoodItem newItem = new FoodItem();
                     newItem.setName(name);
                     newItem.setPrice(Double.valueOf(price));
                     newItem.setRestaurant(restaurant);
-                    newItem.setQuantity(1);
+                    newItem.setQuantity(Integer.parseInt(quantity));
                     log.info(newItem.toString());
-                    Session session = req.session();
-                    User currentUser = userController.getUserByEmail(session.attribute(Path.Web.ATTR_EMAIL));
                     userController.addItemToCart(currentUser, newItem);
                     session.attribute("cart", currentUser.getCart());
-                    //res.redirect("/restaurants/:id", 301);
-                    return "adding successful";
-                });
+                    return currentUser.getCart();
+                },jsonTransformer);
+
+        post(
+                "/subtract",
+                (req, res) -> {
+                    res.type("application/json");
+                    log.info("subtracting new item");
+                    String name = req.queryParams("name");
+                    String price = req.queryParams("price");
+                    String restaurant=req.queryParams("restaurant");
+                    String quantity=req.queryParams("quantity");
+                    Session session = req.session();
+                    User currentUser = userController.getUserByEmail(session.attribute(Path.Web.ATTR_EMAIL));
+                    FoodItem newItem = new FoodItem();
+                    newItem.setName(name);
+                    newItem.setPrice(Double.valueOf(price));
+                    newItem.setRestaurant(restaurant);
+                    newItem.setQuantity(Integer.parseInt(quantity));
+                    userController.deleteItemFromCart(currentUser, newItem);
+                    session.attribute("cart", currentUser.getCart());
+                    return currentUser.getCart();
+                },jsonTransformer);
     }
 }
