@@ -9,16 +9,16 @@ https://delivery-demo-double-c.herokuapp.com/
 ## Final Project Demo
 https://youtu.be/5SysST9RAY0
 
-##Frontend
+## Frontend
 Handlebars, CSS, Bootstrap, JavaScript
 
-##Backend
+## Backend
 SparkJava framework, Java
 
-##Database
+## Database
 MongoDB Atlas 
 
-##Requirement
+## Requirement
 A recent Gradle (>= 6.1.1 but < 7.0.0) and JDK 8.
 
 ## Building
