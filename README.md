@@ -1,9 +1,13 @@
+
 # DoubleC Delivery
 
 This is the basic Delivery project forked in CS5500 F20. 
 
 ## Live Demo
 https://delivery-demo-double-c.herokuapp.com/
+
+## Final Project Demo
+https://youtu.be/5SysST9RAY0
 
 ##Frontend
 Handlebars, CSS, Bootstrap, JavaScript
@@ -36,5 +40,6 @@ The server will start on port 5000 by default.
 Configure as normal and use `git push heroku main`.
 
 `./gradlew build deployHeroku` works to deploy without pushes...sometimes.
+
 
 
