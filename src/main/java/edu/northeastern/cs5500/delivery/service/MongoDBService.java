@@ -25,7 +25,7 @@ public class MongoDBService implements Service {
         if (databaseURI != null) {
             return databaseURI;
         }
-        return "mongodb://localhost:27017/delivery"; // connect to localhost by default
+        return "mongodb+srv://admin:2020123@fooddelivery.xccm4.mongodb.net/FoodDelivery?retryWrites=true&w=majority"; // connect to MongoDB altas
     }
 
     @Getter private MongoDatabase mongoDatabase;

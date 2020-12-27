@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DoubleC Delivery</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="/stylesheets/split-pane.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+
+    <script type="text/javascript" src="/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="/js/split-pane.js"></script>
+    <script type="text/javascript" src="/js/utility.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">DoubleC Delivery</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/restaurants">All Restaurants <span class="sr-only"></span></a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav ml-auto">
+            {{#if username}}
+                <li>
+                    <a class="nav-link" href="/user/{{userId}}/orderHistory">Hi, {{username}}<span
+                            class="sr-only"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signout">Log Out<span class="sr-only"></span></a>
+                </li>
+                <li>
+                    <a class="nav-link btn" id="cart" type="button" data-toggle="modal"
+                       data-target="#shoppingCart"><i class="fas fa-cart-arrow-down"></i>
+                        My Cart</a>
+                </li>
+            {{else}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/signin">Login <span class="sr-only"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup">SignUp <span class="sr-only"></span></a>
+                </li>
+
+            {{/if}}
+        </ul>
+    </div>
+</nav>
+<div class="modal fade" id="shoppingCart" tabindex="-1" role="dialog"
+     aria-labelledby="shoppingCartTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shoppingCartTitle"><i class="fas fa-cart-arrow-down"></i>My Cart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- listing items starts -->
+                {{#if cart}}
+                    <div>
+                        <ul class="cart-list">
+                            {{#each cart}}
+                                <li>{{this.name}} &nbsp <span class="price">&nbsp$&nbsp{{this.price}}</span><span>&times&nbsp&nbsp{{this.quantity}}</span></li>
+                            {{/each}}
+                        </ul>
+
+                    </div>
+                    <!-- listing items ends -->
+                {{else}}
+                    <div>
+                        <h3 class="px-5">Select Something</h3>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <a href="/checkout" class="btn btn-danger checkout m-3">Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

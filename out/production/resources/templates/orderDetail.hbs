@@ -1,0 +1,75 @@
+{{> partials/header.hbs}}
+<hr>
+<div class="bg-light vsc-initialized container" id="checkout-page">
+    <div class="col">
+        <div class="row d-flex justify-content-between align-items-center text-center mb-3">
+            <h4>Order Confirmed</h4>
+        </div>
+        <div hidden id="order_id">
+            <h5>{{order.id}}</h5>
+        </div>
+        <div class="row">
+            <h5 class="d-flex justify-content-between align-items-start mb-3">
+                <span class="text-muted">Order Status : </span>
+            <strong id="orderStatus"> &nbsp{{order.status}}</strong></h5>
+        </div>
+        <hr>
+        <div class="card container">
+            <div class="text-left justify-content-left align-items-start pt-3 ml-3">
+                <h5>Order Details</h5>
+            </div>
+            <hr>
+            <div>
+                {{#each order.dishOrder}}
+                    <div class="row p-2 ml-3 justify-content-start align-items-center">
+                        <p class="text-left"> {{this.name}} ------
+                            <span>&nbsp$ {{this.price}}</span></p>
+                    </div>
+                {{/each}}
+            </div>
+            <hr class="m-2">
+            <div class="d-flex justify-content-center align-items-start p-2">
+                Total Amount Paid: $ {{order.totalCost}}
+            </div>
+        </div>
+        <hr class="m-2">
+        <div class="row d-flex justify-content-start align-items-start p-3" id="update_status">
+            <h5 class="m-3">Update order status</h5>
+            <select class="custom-select d-block " id="status" >
+                <option value="">Change status to ..</option>
+                <option value="pickup"> Ready for pick up</option>
+                <option value="picked"> Picked up by Driver</option>
+                <option value="delivered"> Delivered by Driver</option>
+                <option value="cancel"> Cancelled</option>
+                <option value="completed"> Completed</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let id=document.getElementById('order_id').innerText;
+
+    $(document).ready(function(){
+        $('#status').change(function(){
+            alert( "Handler for .change() called." );
+            status = $(this).val();
+            sentTo=$(location).attr('href')+'/'+status;
+            $.ajax
+            ({
+                url: sentTo,
+                data: {"status": status},
+                type: 'post',
+                success: function (response) {
+                    //send cart html string back as response
+                    $("#orderStatus").val(response.status);
+                    $("#orderStatus").load(location.href + " #orderStatus");
+                },
+                error: function (error) {
+                    console.log("error called! " + JSON.stringify(error));
+                }
+            });
+        });
+    });
+</script>
+{{> partials/footer.hbs}}

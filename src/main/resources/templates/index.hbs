@@ -1,0 +1,39 @@
+{{> partials/header.hbs}}
+<!--//for each restaurant, create a thumbnail to show name, pic, button to direct for details-->
+
+<hr>
+
+<div class="container">
+    <header class="jumbotron">
+        <div class="container">
+            <h1>
+                Welcome to DoubleC Delivery
+            </h1>
+            <p>
+                Yummy food to your door
+            </p>
+        </div>
+    </header>
+
+
+    <div class="row d-flex flex-wrap">
+        {{#each restaurants}}
+            <div class="col-md-3 col-sm-6">
+                <div class="card">
+                    <img class="card-img-top" src="{{this.image}}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.name}}</h5>
+                        <a href="/restaurants/{{this.id}}" class="btn btn-success btn-sm">
+                            Go to Menu
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        {{/each}}
+
+    </div>
+</div>
+
+
+{{>partials/footer.hbs}}
